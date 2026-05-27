@@ -381,12 +381,12 @@ async function askAI(){
     }
 
     response.innerHTML =
-        "🤖 AI กำลังคิด...";
+        "AI กำลังคิด...";
 
-    const API_KEY = "AIzaSyBL30TyJWIYTF0s-_JK6iynqPTc8ByyWHE";
+    const API_KEY = "AIzaSyCC1mT1LhLZe9et_D_kLuMZB0Q-yy85RkA";
 
     const url =
-`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`;
+`https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContentkey=${API_KEY}`;
 
     const data = {
         contents: [
@@ -412,15 +412,25 @@ async function askAI(){
 
         const result = await res.json();
 
-        let aiText =
-result.candidates[0].content.parts[0].text;
+        console.log(result);
+
+let aiText =
+result.candidates?.[0]?.content?.parts?.[0]?.text;
+
+if(!aiText){
+    response.innerHTML =
+        "❌ AI ไม่ตอบกลับ";
+    return;
+}
 
         response.innerHTML = aiText;
     }
 
     catch(error){
 
-        response.innerHTML =
-            "❌ เกิดข้อผิดพลาด";
-    }
+    console.log(error);
+
+    response.innerHTML =
+        "❌ AI Error";
+}
 }
