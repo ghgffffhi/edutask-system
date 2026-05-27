@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduTask</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="container">
+
+        <h1>📚 EduTask</h1>
+        <button onclick="logout()">
+    🚪 Logout
+</button>
+        <button id="themeToggle" onclick="toggleTheme()">
+    🌙 Dark Mode
+</button>
+        <p>ระบบจัดการการบ้านและงานส่ง</p>
+        
+        <div class="progress-box">
+
+    <div class="progress-bar" id="progressBar"></div>
+
+</div>
+
+<p id="progressText">0% เสร็จแล้ว</p>
+        <div class="dashboard">
+
+    <div class="card">
+        <h3 id="totalTasks">0</h3>
+        <p>งานทั้งหมด</p>
+    </div>
+
+    <div class="card">
+        <h3 id="completedTasks">0</h3>
+        <p>งานเสร็จ</p>
+    </div>
+
+    <div class="card">
+        <h3 id="pendingTasks">0</h3>
+        <p>งานค้าง</p>
+    </div>
+
+</div>
+
+<input type="text" id="searchInput" placeholder="🔍 ค้นหางาน..." onkeyup="displayTasks()">
+<select id="filterInput" onchange="displayTasks()">
+
+    <option value="all">📋 ทั้งหมด</option>
+    <option value="completed">✅ งานเสร็จ</option>
+    <option value="pending">⏳ งานค้าง</option>
+
+</select>
+
+        <div class="task-box">
+            <input type="text" id="taskInput" placeholder="เพิ่มงาน...">
+            <textarea 
+            id="descriptionInput" 
+            placeholder="รายละเอียดงาน..."
+></textarea>
+
+            <input type="date" id="dateInput">
+
+            <select id="priorityInput">
+
+    <option value="สูง">🔴 ด่วน</option>
+
+    <option value="กลาง">🟡 ปกติ</option>
+
+    <option value="ต่ำ">🟢 ชิลๆ</option>
+
+</select>
+
+<select id="subjectInput">
+
+    <option value="คณิตศาสตร์">📘 คณิตศาสตร์</option>
+
+    <option value="ภาษาอังกฤษ">📗 ภาษาอังกฤษ</option>
+
+    <option value="วิทยาศาสตร์">📙 วิทยาศาสตร์</option>
+
+    <option value="การเขียนโปรแกรม">💻 การเขียนโปรแกรม</option>
+
+</select>
+
+            <button onclick="addTask()">เพิ่มงาน</button>
+        </div>
+
+        <div class="calendar-box">
+
+    <h3>📅 งานที่กำลังจะมาถึง</h3>
+
+    <div id="calendarPreview"></div>
+
+</div>
+        <ul id="taskList"></ul>
+
+    </div>
+
+    <div id="toast"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
