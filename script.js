@@ -343,3 +343,61 @@ function logout(){
 
     window.location.href = "login.html";
 }
+async function askAI(){
+
+    let input =
+        document.getElementById("aiInput").value;
+
+    let response =
+        document.getElementById("aiResponse");
+
+    if(input === ""){
+        response.innerHTML =
+            "⚠️ กรุณาพิมพ์คำถาม";
+        return;
+    }
+
+    response.innerHTML =
+        "🤖 AI กำลังคิด...";
+
+    const API_KEY = "AIzaSyBL30TyJWIYTF0s-_JK6iynqPTc8ByyWHE";
+
+    const url =
+`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`;
+
+    const data = {
+        contents: [
+            {
+                parts: [
+                    {
+                        text: input
+                    }
+                ]
+            }
+        ]
+    };
+
+    try{
+
+        const res = await fetch(url,{
+            method:"POST",
+            headers:{
+                "Content-Type":"application/json"
+            },
+            body:JSON.stringify(data)
+        });
+
+        const result = await res.json();
+
+        let aiText =
+result.candidates[0].content.parts[0].text;
+
+        response.innerHTML = aiText;
+    }
+
+    catch(error){
+
+        response.innerHTML =
+            "❌ เกิดข้อผิดพลาด";
+    }
+}
