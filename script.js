@@ -275,6 +275,29 @@ function pinTask(index){
 
     updateProgress();
 }
+function showNotifications(){
+
+    let urgentTasks = tasks.filter(task => {
+
+        let dueDate = new Date(task.date);
+
+        let today = new Date();
+
+        let diffTime = dueDate - today;
+
+        let diffDays =
+            Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+        return diffDays <= 1 && diffDays >= 0;
+    });
+
+    if(urgentTasks.length > 0){
+
+        showToast(
+            `⚠️ มีงานใกล้ส่ง ${urgentTasks.length} งาน`
+        );
+    }
+}
 displayTasks();
 updateCalendar();
 updateDashboard();
