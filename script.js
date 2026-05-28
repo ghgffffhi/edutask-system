@@ -374,22 +374,27 @@ async function askAI(){
     let response =
         document.getElementById("aiResponse");
 
-    if(input === ""){
+    if(input.trim() === ""){
+
         response.innerHTML =
             "⚠️ กรุณาพิมพ์คำถาม";
+
         return;
     }
 
     response.innerHTML =
         "AI กำลังคิด...";
 
-    const API_KEY = "AIzaSyCC1mT1LhLZe9et_D_kLuMZB0Q-yy85RkA";
+    const API_KEY =
+    "AIzaSyCC1mT1LhLZe9et_D_kLuMZB0Q-yy85RkA";
 
     const url =
-`https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContentkey=${API_KEY}`;
+`https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
 
     const data = {
+
         contents: [
+
             {
                 parts: [
                     {
@@ -397,40 +402,49 @@ async function askAI(){
                     }
                 ]
             }
+
         ]
     };
 
     try{
 
         const res = await fetch(url,{
-            method:"POST",
-            headers:{
-                "Content-Type":"application/json"
+
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
             },
-            body:JSON.stringify(data)
+
+            body: JSON.stringify(data)
         });
 
         const result = await res.json();
 
         console.log(result);
 
-let aiText =
-result.candidates?.[0]?.content?.parts?.[0]?.text;
+        if(
+            !result.candidates ||
+            !result.candidates[0]
+        ){
 
-if(!aiText){
-    response.innerHTML =
-        "❌ AI ไม่ตอบกลับ";
-    return;
-}
+            response.innerHTML =
+                "❌ AI ไม่ตอบกลับ";
+
+            return;
+        }
+
+        let aiText =
+result.candidates[0].content.parts[0].text;
 
         response.innerHTML = aiText;
     }
 
     catch(error){
 
-    console.log(error);
+        console.log(error);
 
-    response.innerHTML =
-        "❌ AI Error";
-}
+        response.innerHTML =
+            "❌ เกิดข้อผิดพลาดในการเชื่อมต่อ AI";
+    }
 }
