@@ -240,7 +240,7 @@ async function askAI(){
     responseDiv.innerHTML = `<span style="color:var(--text2)">🤔 AI กำลังคิด...</span>`;
 
     // *** ใส่ API Key ของเธอตรงนี้ ***
-    const API_KEY = "AIzaSyCC1mT1LhLZe9et_D_kLuMZB0Q-yy85RkA";
+    const API_KEY = "AQ.Ab8RN6ImPrMrUJK2aeJcUPFmf3XLuXZClBvRCA6crJcd6YKGCw";
     const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`;
 
     const body = {
