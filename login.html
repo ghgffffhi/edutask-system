@@ -3,35 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-
+    <title>EduTask — เข้าสู่ระบบ</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
-<div class="container">
+<div class="auth-wrapper">
+    <div class="auth-box">
 
-    <h1>🔐 Login</h1>
+        <div class="auth-logo">
+            <h1>📚 EduTask</h1>
+            <p>เข้าสู่ระบบเพื่อจัดการงานของเธอ</p>
+        </div>
 
-    <input type="text" id="loginUsername"
-    placeholder="ชื่อผู้ใช้">
+        <div class="auth-form">
+            <input type="text" id="loginUsername" placeholder="ชื่อผู้ใช้">
+            <input type="password" id="loginPassword" placeholder="รหัสผ่าน">
+            <button onclick="login()" class="btn-primary">เข้าสู่ระบบ</button>
+        </div>
 
-    <input type="password" id="loginPassword"
-    placeholder="รหัสผ่าน">
+        <div class="auth-link">
+            ยังไม่มีบัญชี? <a href="register.html">สมัครสมาชิก</a>
+        </div>
 
-    <button onclick="login()">
-        เข้าสู่ระบบ
-    </button>
-
-    <br><br>
-
-    <a href="register.html">
-        สมัครสมาชิก
-    </a>
-
+    </div>
 </div>
 
+<div id="toast"></div>
 <script src="auth.js"></script>
-
 </body>
 </html>

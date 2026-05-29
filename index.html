@@ -4,121 +4,113 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EduTask</title>
-
     <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <div class="container">
-
-        <h1>📚 EduTask</h1>
-        <button onclick="logout()">
-    🚪 Logout
-</button>
-        <button id="themeToggle" onclick="toggleTheme()">
-    🌙 Dark Mode
-</button>
-        <p>ระบบจัดการการบ้านและงานส่ง</p>
-        
-        <div class="progress-box">
-
-    <div class="progress-bar" id="progressBar"></div>
-
-</div>
-
-<p id="progressText">0% เสร็จแล้ว</p>
-        <div class="dashboard">
-
-    <div class="card">
-        <h3 id="totalTasks">0</h3>
-        <p>งานทั้งหมด</p>
-    </div>
-
-    <div class="card">
-        <h3 id="completedTasks">0</h3>
-        <p>งานเสร็จ</p>
-    </div>
-
-    <div class="card">
-        <h3 id="pendingTasks">0</h3>
-        <p>งานค้าง</p>
-    </div>
-
-</div>
-
-<input type="text" id="searchInput" placeholder="🔍 ค้นหางาน..." onkeyup="displayTasks()">
-<select id="filterInput" onchange="displayTasks()">
-
-    <option value="all">📋 ทั้งหมด</option>
-    <option value="completed">✅ งานเสร็จ</option>
-    <option value="pending">⏳ งานค้าง</option>
-
-</select>
-
-        <div class="task-box">
-            <input type="text" id="taskInput" placeholder="เพิ่มงาน...">
-            <textarea 
-            id="descriptionInput" 
-            placeholder="รายละเอียดงาน..."
-></textarea>
-
-            <input type="date" id="dateInput">
-
-            <select id="priorityInput">
-
-    <option value="สูง">🔴 ด่วน</option>
-
-    <option value="กลาง">🟡 ปกติ</option>
-
-    <option value="ต่ำ">🟢 ชิลๆ</option>
-
-</select>
-
-<select id="subjectInput">
-
-    <option value="คณิตศาสตร์">📘 คณิตศาสตร์</option>
-
-    <option value="ภาษาอังกฤษ">📗 ภาษาอังกฤษ</option>
-
-    <option value="วิทยาศาสตร์">📙 วิทยาศาสตร์</option>
-
-    <option value="การเขียนโปรแกรม">💻 การเขียนโปรแกรม</option>
-
-</select>
-
-            <button onclick="addTask()">เพิ่มงาน</button>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-brand">
+            <span>📚</span>
+            <span class="brand-name">EduTask</span>
         </div>
+        <div class="nav-actions">
+            <button id="themeToggle" onclick="toggleTheme()" class="btn-icon">🌙</button>
+            <button onclick="logout()" class="btn-logout">🚪 ออกจากระบบ</button>
+        </div>
+    </nav>
 
-        <div class="calendar-box">
+    <!-- Main Layout -->
+    <div class="main-layout">
 
-    <h3>📅 งานที่กำลังจะมาถึง</h3>
+        <!-- Sidebar -->
+        <aside class="sidebar">
 
-    <div id="calendarPreview"></div>
+            <!-- Dashboard -->
+            <div class="panel">
+                <p class="panel-title">ภาพรวม</p>
+                <div class="dashboard">
+                    <div class="stat-card">
+                        <h3 id="totalTasks">0</h3>
+                        <p>ทั้งหมด</p>
+                    </div>
+                    <div class="stat-card stat-done">
+                        <h3 id="completedTasks">0</h3>
+                        <p>เสร็จแล้ว</p>
+                    </div>
+                    <div class="stat-card stat-pending">
+                        <h3 id="pendingTasks">0</h3>
+                        <p>ค้างอยู่</p>
+                    </div>
+                </div>
+                <div class="progress-box">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
+                <p id="progressText" class="progress-text">0% เสร็จแล้ว</p>
+            </div>
 
-</div>
+            <!-- Calendar -->
+            <div class="panel">
+                <p class="panel-title">📅 งานที่กำลังจะมาถึง</p>
+                <div id="calendarPreview"></div>
+            </div>
 
-<div class="ai-box">
+            <!-- AI Box -->
+            <div class="panel ai-panel">
+                <p class="panel-title">✨ AI ผู้ช่วย</p>
+                <textarea id="aiInput" placeholder="ถาม AI เช่น สรุปเรื่องแรงและการเคลื่อนที่ให้หน่อย"></textarea>
+                <button onclick="askAI()" class="btn-ai">✨ ถาม AI</button>
+                <div id="aiResponse"></div>
+            </div>
 
-    <h3>AI ผู้ช่วย</h3>
+        </aside>
 
-    <textarea
-        id="aiInput"
-        placeholder="ถาม AI เช่น ช่วยสรุปเรื่องแรงและการเคลื่อนที่"
-    ></textarea>
+        <!-- Main Content -->
+        <main class="main-content">
 
-    <button onclick="askAI()">
-        ✨ ถาม AI
-    </button>
+            <!-- Add Task -->
+            <div class="panel">
+                <p class="panel-title">➕ เพิ่มงานใหม่</p>
+                <div class="task-form">
+                    <input type="text" id="taskInput" placeholder="ชื่องาน...">
+                    <textarea id="descriptionInput" placeholder="รายละเอียดงาน (ถ้ามี)"></textarea>
+                    <div class="form-row">
+                        <input type="date" id="dateInput">
+                        <select id="priorityInput">
+                            <option value="สูง">🔴 ด่วน</option>
+                            <option value="กลาง" selected>🟡 ปกติ</option>
+                            <option value="ต่ำ">🟢 ชิลๆ</option>
+                        </select>
+                    </div>
+                    <select id="subjectInput">
+                        <option value="คณิตศาสตร์">📘 คณิตศาสตร์</option>
+                        <option value="ภาษาอังกฤษ">📗 ภาษาอังกฤษ</option>
+                        <option value="วิทยาศาสตร์">📙 วิทยาศาสตร์</option>
+                        <option value="การเขียนโปรแกรม">💻 การเขียนโปรแกรม</option>
+                    </select>
+                    <button onclick="addTask()" class="btn-primary">+ เพิ่มงาน</button>
+                </div>
+            </div>
 
-    <div id="aiResponse"></div>
+            <!-- Search & Filter -->
+            <div class="search-row">
+                <input type="text" id="searchInput" placeholder="🔍 ค้นหางาน..." onkeyup="displayTasks()">
+                <select id="filterInput" onchange="displayTasks()">
+                    <option value="all">📋 ทั้งหมด</option>
+                    <option value="completed">✅ งานเสร็จ</option>
+                    <option value="pending">⏳ งานค้าง</option>
+                </select>
+            </div>
 
-</div>
-        <ul id="taskList"></ul>
+            <!-- Task List -->
+            <ul id="taskList"></ul>
 
+        </main>
     </div>
 
     <div id="toast"></div>
-
     <script src="script.js"></script>
 </body>
 </html>

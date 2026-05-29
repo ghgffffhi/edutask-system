@@ -1,450 +1,304 @@
 if(localStorage.getItem("loggedIn") !== "true"){
-
     window.location.href = "login.html";
 }
+
 let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
 
-
+// ===== Add Task =====
 function addTask(){
-
-    let taskInput = document.getElementById("taskInput");
-    let dateInput = document.getElementById("dateInput");
-
-    let task = taskInput.value;
-    let date = dateInput.value;
-    let description = document.getElementById("descriptionInput").value;
-    let subject = document.getElementById("subjectInput").value;
-    let priority = document.getElementById("priorityInput").value;
+    let taskInput       = document.getElementById("taskInput");
+    let dateInput       = document.getElementById("dateInput");
+    let descInput       = document.getElementById("descriptionInput");
+    let task            = taskInput.value.trim();
+    let date            = dateInput.value;
+    let description     = descInput.value.trim();
+    let subject         = document.getElementById("subjectInput").value;
+    let priority        = document.getElementById("priorityInput").value;
 
     if(task === ""){
-        alert("กรุณากรอกงาน");
+        alert("กรุณากรอกชื่องาน");
         return;
     }
 
-    let taskData = {
+    tasks.push({
         text: task,
         date: date,
         completed: false,
         subject: subject,
         priority: priority,
-        createdAt: new Date().toLocaleString(),
-description: description,
-pinned: false
-    };
+        createdAt: new Date().toLocaleString("th-TH"),
+        description: description,
+        pinned: false
+    });
 
-    tasks.push(taskData);
     showToast("✅ เพิ่มงานสำเร็จ");
-
     saveTasks();
+    refresh();
 
-    displayTasks();
-    updateCalendar();
-    updateDashboard();
-    updateProgress();
-
-    taskInput.value = "";
-    dateInput.value = "";
+    taskInput.value    = "";
+    dateInput.value    = "";
+    descInput.value    = "";
 }
 
+// ===== Display Tasks =====
 function displayTasks(){
-
-    let taskList = document.getElementById("taskList");
+    let taskList    = document.getElementById("taskList");
+    let search      = (document.getElementById("searchInput")?.value || "").toLowerCase();
+    let filter      = document.getElementById("filterInput")?.value || "all";
 
     taskList.innerHTML = "";
 
-    let searchInput = document.getElementById("searchInput");
-    let filterInput = document.getElementById("filterInput");
-
-    let search = searchInput ? searchInput.value.toLowerCase() : "";
-    let filter = filterInput ? filterInput.value : "all";
-
     tasks.forEach((task, index) => {
-
-        let matchSearch =
-            task.text.toLowerCase().includes(search);
-
+        let matchSearch = task.text.toLowerCase().includes(search);
         let matchFilter =
             filter === "all" ||
             (filter === "completed" && task.completed) ||
             (filter === "pending" && !task.completed);
 
-        if(matchSearch && matchFilter){
+        if(!matchSearch || !matchFilter) return;
 
-            let li = document.createElement("li");
+        let li = document.createElement("li");
+        if(task.pinned)             li.classList.add("pinned");
+        if(task.priority === "สูง") li.classList.add("high");
+        else if(task.priority === "กลาง") li.classList.add("medium");
+        else                        li.classList.add("low");
 
-            if(task.pinned){
-                li.classList.add("pinned");
-            }
+        // Deadline badge
+        let warn = getDeadlineWarning(task.date);
+        let warnBadge = "";
+        if(warn === "soon")    warnBadge = `<span class="badge badge-warn">🚨 ใกล้ครบกำหนด</span>`;
+        else if(warn === "late") warnBadge = `<span class="badge badge-late">❌ เลยกำหนดแล้ว</span>`;
 
-            if(task.priority === "สูง"){
-                li.classList.add("high");
-            }
-            else if(task.priority === "กลาง"){
-                li.classList.add("medium");
-            }
-            else{
-                li.classList.add("low");
-            }
+        let dateBadge = task.date
+            ? `<span class="badge badge-date">📅 ${task.date}</span>` : "";
 
-            li.innerHTML = `
-                <div class="task-content">
+        let descHtml = task.description
+            ? `<p class="task-desc">📝 ${task.description}</p>` : "";
 
-                    <strong style="
-                        text-decoration:${task.completed ? "line-through" : "none"};
-                        opacity:${task.completed ? "0.5" : "1"};
-                    ">
-                        ${task.pinned ? "📌 " : ""}${task.text}
-                    </strong>
+        let pinLabel = task.pinned ? "📌 เลิกปักหมุด" : "📌 ปักหมุด";
+        let doneLabel = task.completed ? "↩ ยกเลิก" : "✓ เสร็จแล้ว";
+        let pinPrefix = task.pinned ? "📌 " : "";
 
-                    <br><br>
+        li.innerHTML = `
+            <p class="task-title ${task.completed ? 'done' : ''}">${pinPrefix}${task.text}</p>
+            <div class="task-meta">
+                <span class="badge badge-subject">${task.subject}</span>
+                ${dateBadge}
+                ${warnBadge}
+            </div>
+            ${descHtml}
+            <div class="task-actions">
+                <button class="btn-done" onclick="toggleTask(${index})">${doneLabel}</button>
+                <button class="btn-edit" onclick="editTask(${index})">✏️ แก้ไข</button>
+                <button class="btn-pin"  onclick="pinTask(${index})">${pinLabel}</button>
+                <button class="btn-del"  onclick="deleteTask(${index})">🗑️ ลบ</button>
+            </div>
+        `;
 
-                    📝 ${task.description || "ไม่มีรายละเอียด"}
-
-                    <br><br>
-
-                    📚 ${task.subject}
-
-                    <br><br>
-
-                    🚨 ${task.priority}
-
-                    <br><br>
-
-                    📅 ${task.date}
-
-                    <br><br>
-
-                    ${getDeadlineWarning(task.date)}
-
-                    <br><br>
-
-                    🕒 ${task.createdAt}
-
-                    <br><br>
-
-                    <button onclick="toggleTask(${index})">
-                        ${task.completed ? "ยกเลิก" : "เสร็จแล้ว"}
-                    </button>
-
-                    <button onclick="editTask(${index})">
-                        แก้ไข
-                    </button>
-
-                    <button onclick="pinTask(${index})">
-                        📌 ปักหมุด
-                    </button>
-
-                    <button onclick="deleteTask(${index})">
-                        ลบ
-                    </button>
-
-                </div>
-            `;
-
-            taskList.appendChild(li);
-        }
+        taskList.appendChild(li);
     });
 }
 
+// ===== Toggle / Delete / Edit / Pin =====
 function toggleTask(index){
-
     tasks[index].completed = !tasks[index].completed;
-    showToast("🎉 อัปเดตสถานะงานแล้ว");
-
-    saveTasks();
-
-    displayTasks();
-    updateCalendar();
-    updateDashboard();
-    updateProgress();
+    showToast("🎉 อัปเดตสถานะแล้ว");
+    saveTasks(); refresh();
 }
 
 function deleteTask(index){
-
-    tasks.splice(index,1);
+    tasks.splice(index, 1);
     showToast("🗑️ ลบงานแล้ว");
-
-    saveTasks();
-
-    displayTasks();
-    updateCalendar();
-    updateDashboard();
-    updateProgress();
+    saveTasks(); refresh();
 }
 
-function saveTasks(){
-
-    localStorage.setItem("tasks", JSON.stringify(tasks));
-}
-function updateDashboard(){
-
-    let total = tasks.length;
-
-    let completed = tasks.filter(task => task.completed).length;
-
-    let pending = total - completed;
-
-    document.getElementById("totalTasks").textContent = total;
-
-    document.getElementById("completedTasks").textContent = completed;
-
-    document.getElementById("pendingTasks").textContent = pending;
-}
 function editTask(index){
-
-    let newTask = prompt(
-        "แก้ไขชื่องาน",
-        tasks[index].text
-    );
-
-    if(newTask !== null && newTask !== ""){
-
-        let newDescription = prompt(
-            "แก้ไขรายละเอียดงาน",
-            tasks[index].description || ""
-        );
-
-        let newDate = prompt(
-            "แก้ไขวันส่ง",
-            tasks[index].date || ""
-        );
-
-        tasks[index].text = newTask;
-
-        tasks[index].description = newDescription;
-
-        tasks[index].date = newDate;
-
-        saveTasks();
-
-        displayTasks();
-        updateCalendar();
-        updateDashboard();
-        updateProgress();
-    }
-}
-function toggleTheme(){
-
-    document.body.classList.toggle("light-mode");
-
-    let button = document.getElementById("themeToggle");
-
-    if(document.body.classList.contains("light-mode")){
-        button.innerHTML = "☀️ Light Mode";
-    }
-    else{
-        button.innerHTML = "🌙 Dark Mode";
-    }
-}
-function getDeadlineWarning(date){
-
-    let today = new Date();
-
-    let dueDate = new Date(date);
-
-    let diffTime = dueDate - today;
-
-    let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-    if(diffDays <= 1 && diffDays >= 0){
-    return "🚨 งานใกล้ถึงกำหนดส่ง";
-    }
-
-    else if(diffDays < 0){
-    return "❌ เลยกำหนดส่งแล้ว";
-    }
-
-    else{
-        return "";
-    }
+    let newTask = prompt("แก้ไขชื่องาน", tasks[index].text);
+    if(newTask === null || newTask.trim() === "") return;
+    let newDesc = prompt("แก้ไขรายละเอียด", tasks[index].description || "");
+    let newDate = prompt("แก้ไขวันส่ง (YYYY-MM-DD)", tasks[index].date || "");
+    tasks[index].text = newTask.trim();
+    tasks[index].description = newDesc || "";
+    tasks[index].date = newDate || "";
+    showToast("✏️ แก้ไขสำเร็จ");
+    saveTasks(); refresh();
 }
 
 function pinTask(index){
-
     tasks[index].pinned = !tasks[index].pinned;
+    tasks.sort((a, b) => b.pinned - a.pinned);
+    saveTasks(); refresh();
+}
 
-    tasks.sort((a,b) => b.pinned - a.pinned);
+// ===== Save / Refresh =====
+function saveTasks(){
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+}
 
-    saveTasks();
-
+function refresh(){
     displayTasks();
-
     updateCalendar();
-
     updateDashboard();
-
     updateProgress();
 }
-function showNotifications(){
 
-    let urgentTasks = tasks.filter(task => {
-
-        let dueDate = new Date(task.date);
-
-        let today = new Date();
-
-        let diffTime = dueDate - today;
-
-        let diffDays =
-            Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-        return diffDays <= 1 && diffDays >= 0;
-    });
-
-    if(urgentTasks.length > 0){
-
-        showToast(
-            `⚠️ มีงานใกล้ส่ง ${urgentTasks.length} งาน`
-        );
-    }
+// ===== Dashboard =====
+function updateDashboard(){
+    let total       = tasks.length;
+    let completed   = tasks.filter(t => t.completed).length;
+    let pending     = total - completed;
+    document.getElementById("totalTasks").textContent      = total;
+    document.getElementById("completedTasks").textContent  = completed;
+    document.getElementById("pendingTasks").textContent    = pending;
 }
-displayTasks();
-updateCalendar();
-updateDashboard();
-updateProgress();
-showNotifications();
 
-function updateCalendar(){
-
-    let calendar =
-        document.getElementById("calendarPreview");
-
-    calendar.innerHTML = "";
-
-    let sortedTasks =
-        [...tasks].sort((a,b)=>
-            new Date(a.date) - new Date(b.date)
-        );
-
-    sortedTasks.slice(0,5).forEach(task=>{
-
-        let div = document.createElement("div");
-
-        div.classList.add("calendar-item");
-
-        div.innerHTML = `
-            📚 ${task.text}
-            <br>
-            📅 ${task.date}
-        `;
-
-        calendar.appendChild(div);
-    });
-}
-function showToast(message){
-
-    let toast = document.getElementById("toast");
-
-    toast.textContent = message;
-
-    toast.classList.add("show");
-
-    setTimeout(()=>{
-        toast.classList.remove("show");
-    },3000);
-}
+// ===== Progress =====
 function updateProgress(){
-
-    let completed =
-        tasks.filter(task => task.completed).length;
-
-    let total = tasks.length;
-
-    let percent =
-        total === 0 ? 0 :
-        Math.round((completed / total) * 100);
-
-    document.getElementById("progressBar")
-        .style.width = percent + "%";
-
-    document.getElementById("progressText")
-        .textContent = percent + "% เสร็จแล้ว";
+    let total     = tasks.length;
+    let completed = tasks.filter(t => t.completed).length;
+    let percent   = total === 0 ? 0 : Math.round((completed / total) * 100);
+    document.getElementById("progressBar").style.width = percent + "%";
+    document.getElementById("progressText").textContent = percent + "% เสร็จแล้ว";
 }
-function logout(){
 
-    localStorage.removeItem("loggedIn");
+// ===== Calendar =====
+function updateCalendar(){
+    let cal = document.getElementById("calendarPreview");
+    cal.innerHTML = "";
 
-    window.location.href = "login.html";
-}
-async function askAI(){
+    let upcoming = [...tasks]
+        .filter(t => t.date && !t.completed)
+        .sort((a, b) => new Date(a.date) - new Date(b.date))
+        .slice(0, 5);
 
-    let input =
-        document.getElementById("aiInput").value;
-
-    let response =
-        document.getElementById("aiResponse");
-
-    if(input.trim() === ""){
-
-        response.innerHTML =
-            "⚠️ กรุณาพิมพ์คำถาม";
-
+    if(upcoming.length === 0){
+        cal.innerHTML = `<p style="color:var(--text2);font-size:12px;text-align:center;padding:8px 0">ยังไม่มีงานที่รอส่ง 🎉</p>`;
         return;
     }
 
-    response.innerHTML =
-        "AI กำลังคิด...";
+    upcoming.forEach(task => {
+        let div = document.createElement("div");
+        div.classList.add("calendar-item");
+        div.innerHTML = `
+            <strong style="font-size:13px">${task.text}</strong><br>
+            <span style="color:var(--text2);font-size:12px">📅 ${task.date} · ${task.subject}</span>
+        `;
+        cal.appendChild(div);
+    });
+}
 
-    const API_KEY =
-    "AIzaSyCC1mT1LhLZe9et_D_kLuMZB0Q-yy85RkA";
+// ===== Deadline Warning =====
+function getDeadlineWarning(date){
+    if(!date) return "";
+    let today   = new Date();
+    let due     = new Date(date);
+    let diff    = Math.ceil((due - today) / (1000 * 60 * 60 * 24));
+    if(diff < 0)  return "late";
+    if(diff <= 1) return "soon";
+    return "";
+}
 
-    const url =
-`https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
+// ===== Toast =====
+function showToast(msg){
+    let t = document.getElementById("toast");
+    t.textContent = msg;
+    t.classList.add("show");
+    setTimeout(() => t.classList.remove("show"), 3000);
+}
 
-    const data = {
+// ===== Theme =====
+function toggleTheme(){
+    document.body.classList.toggle("light-mode");
+    let btn = document.getElementById("themeToggle");
+    btn.innerHTML = document.body.classList.contains("light-mode") ? "☀️" : "🌙";
+}
 
-        contents: [
+// ===== Logout =====
+function logout(){
+    localStorage.removeItem("loggedIn");
+    window.location.href = "login.html";
+}
 
-            {
-                parts: [
-                    {
-                        text: input
-                    }
-                ]
-            }
+// ===== Notifications =====
+function showNotifications(){
+    let soon = tasks.filter(t => getDeadlineWarning(t.date) === "soon");
+    if(soon.length > 0) showToast(`⚠️ มีงานใกล้ส่ง ${soon.length} งาน`);
+}
 
-        ]
+// ===== AI Assistant =====
+async function askAI(){
+    let input       = document.getElementById("aiInput").value.trim();
+    let responseDiv = document.getElementById("aiResponse");
+
+    if(input === ""){
+        responseDiv.className = "show";
+        responseDiv.innerHTML = "⚠️ พิมพ์คำถามก่อนนะ";
+        return;
+    }
+
+    responseDiv.className = "show";
+    responseDiv.innerHTML = `<span style="color:var(--text2)">🤔 AI กำลังคิด...</span>`;
+
+    // *** ใส่ API Key ของเธอตรงนี้ ***
+    const API_KEY = "AIzaSyCC1mT1LhLZe9et_D_kLuMZB0Q-yy85RkA";
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
+
+    const body = {
+        contents: [{
+            parts: [{
+                text: `คุณเป็น AI ผู้ช่วยการเรียนสำหรับนักเรียนไทย ตอบเป็นภาษาไทย กระชับ ชัดเจน และเป็นมิตร\n\nคำถาม: ${input}`
+            }]
+        }],
+        generationConfig: {
+            temperature: 0.7,
+            maxOutputTokens: 1024
+        }
     };
 
-    try{
-
-        const res = await fetch(url,{
-
+    try {
+        const res = await fetch(url, {
             method: "POST",
-
-            headers: {
-                "Content-Type": "application/json"
-            },
-
-            body: JSON.stringify(data)
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(body)
         });
 
         const result = await res.json();
 
-        console.log(result);
-
-        if(
-            !result.candidates ||
-            !result.candidates[0]
-        ){
-
-            response.innerHTML =
-                "❌ AI ไม่ตอบกลับ";
-
+        // ถ้า API ตอบ error
+        if(!res.ok){
+            let errMsg = result?.error?.message || "ไม่ทราบสาเหตุ";
+            console.error("Gemini API Error:", result);
+            responseDiv.innerHTML = `❌ <strong>API Error ${res.status}:</strong> ${errMsg}<br><br>
+                <small style="color:var(--text2)">💡 ลองเช็ค: API Key ถูกต้องมั้ย / quota หมดหรือเปล่า</small>`;
             return;
         }
 
-        let aiText =
-result.candidates[0].content.parts[0].text;
+        if(!result.candidates || !result.candidates[0]){
+            console.error("No candidates:", result);
+            // อาจโดน safety filter
+            let reason = result.promptFeedback?.blockReason || "ไม่ทราบสาเหตุ";
+            responseDiv.innerHTML = `❌ AI ไม่ตอบกลับ (${reason}) ลองถามใหม่อีกครั้งนะ`;
+            return;
+        }
 
-        response.innerHTML = aiText;
-    }
+        let text = result.candidates[0].content.parts[0].text;
 
-    catch(error){
+        // แปลง Markdown พื้นฐาน → HTML
+        text = text
+            .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+            .replace(/\*(.*?)\*/g, "<em>$1</em>")
+            .replace(/^#{1,3}\s(.+)$/gm, "<strong>$1</strong>")
+            .replace(/\n/g, "<br>");
 
-        console.log(error);
+        responseDiv.innerHTML = text;
 
-        response.innerHTML =
-            "❌ เกิดข้อผิดพลาดในการเชื่อมต่อ AI";
+    } catch(err){
+        console.error("Fetch Error:", err);
+        responseDiv.innerHTML = `❌ เชื่อมต่อ AI ไม่ได้<br>
+            <small style="color:var(--text2)">💡 ถ้า deploy บน GitHub Pages ควรใช้งานได้ปกติ / ถ้าเปิด file:// อยู่อาจถูก block CORS</small>`;
     }
 }
+
+// ===== Init =====
+refresh();
+showNotifications();
