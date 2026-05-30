@@ -16,6 +16,10 @@
             <span>📚</span>
             <span class="brand-name">EduTask</span>
         </div>
+        <div class="nav-links">
+            <a href="index.html" class="nav-link active">📋 งาน</a>
+            <a href="goals.html" class="nav-link">🎯 เป้าหมาย</a>
+        </div>
         <div class="nav-actions">
             <button id="themeToggle" onclick="toggleTheme()" class="btn-icon">🌙</button>
             <button onclick="logout()" class="btn-logout">🚪 ออกจากระบบ</button>
@@ -60,7 +64,16 @@
             <!-- AI Box -->
             <div class="panel ai-panel">
                 <p class="panel-title">✨ AI ผู้ช่วย</p>
-                <textarea id="aiInput" placeholder="ถาม AI เช่น สรุปเรื่องแรงและการเคลื่อนที่ให้หน่อย"></textarea>
+
+                <div class="apikey-row">
+                    <input type="password" id="apiKeyInput" placeholder="🔑 วาง Gemini API Key ที่นี่">
+                    <button onclick="saveApiKey()" class="btn-save-key">บันทึก</button>
+                </div>
+                <p id="apiKeyStatus" class="apikey-hint">
+                    ขอ Key ฟรีได้ที่ <a href="https://aistudio.google.com" target="_blank">aistudio.google.com</a>
+                </p>
+
+                <textarea id="aiInput" placeholder="ถาม AI เช่น สรุปเรื่องแรงและการเคลื่อนที่ให้หน่อย" style="margin-top:10px"></textarea>
                 <button onclick="askAI()" class="btn-ai">✨ ถาม AI</button>
                 <div id="aiResponse"></div>
             </div>

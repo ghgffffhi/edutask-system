@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduTask — เป้าหมายประจำวัน</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="goals.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&family=Sriracha&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="nav-brand">
+            <span>📚</span>
+            <span class="brand-name">EduTask</span>
+        </div>
+        <div class="nav-links">
+            <a href="index.html" class="nav-link">📋 งาน</a>
+            <a href="goals.html" class="nav-link active">🎯 เป้าหมาย</a>
+        </div>
+        <div class="nav-actions">
+            <button id="themeToggle" onclick="toggleTheme()" class="btn-icon">🌙</button>
+            <button onclick="logout()" class="btn-logout">🚪 ออกจากระบบ</button>
+        </div>
+    </nav>
+
+    <div class="goals-layout">
+
+        <!-- Pet Panel -->
+        <aside class="pet-panel">
+
+            <div class="pet-card">
+                <!-- Stars bg -->
+                <div class="pet-stars">
+                    <span class="star s1">✦</span>
+                    <span class="star s2">✦</span>
+                    <span class="star s3">✧</span>
+                    <span class="star s4">✦</span>
+                    <span class="star s5">✧</span>
+                </div>
+
+                <div class="pet-stage-label" id="petStageLabel">ไข่ปริศนา</div>
+
+                <div class="pet-display" id="petDisplay">
+                    <div class="pet-glow" id="petGlow"></div>
+                    <div class="pet-emoji" id="petEmoji">🥚</div>
+                    <div class="pet-shadow"></div>
+                </div>
+
+                <div class="pet-mood" id="petMood">
+                    <span id="petMoodText">💤 ตั้งเป้าหมายเพื่อปลุกเค้าขึ้นมาสิ!</span>
+                </div>
+            </div>
+
+            <!-- Stats -->
+            <div class="stats-grid">
+                <div class="stat-pill streak">
+                    <span class="stat-icon">🔥</span>
+                    <div>
+                        <div class="stat-num" id="streakCount">0</div>
+                        <div class="stat-lbl">วันติดต่อกัน</div>
+                    </div>
+                </div>
+                <div class="stat-pill xp">
+                    <span class="stat-icon">⚡</span>
+                    <div>
+                        <div class="stat-num" id="xpCount">0</div>
+                        <div class="stat-lbl">XP รวม</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Evolution Progress -->
+            <div class="evo-box">
+                <div class="evo-header">
+                    <span>วิวัฒนาการ</span>
+                    <span id="evoLabel">🥚 → 🐣</span>
+                </div>
+                <div class="evo-track">
+                    <div class="evo-fill" id="evoFill"></div>
+                </div>
+                <div class="evo-days" id="evoDays">อีก 3 วัน</div>
+            </div>
+
+            <!-- Evolution Path -->
+            <div class="evo-path">
+                <div class="evo-step" id="step0">🥚</div>
+                <div class="evo-arrow">›</div>
+                <div class="evo-step" id="step1">🐣</div>
+                <div class="evo-arrow">›</div>
+                <div class="evo-step" id="step2">🐱</div>
+                <div class="evo-arrow">›</div>
+                <div class="evo-step" id="step3">🦊</div>
+                <div class="evo-arrow">›</div>
+                <div class="evo-step" id="step4">🐉</div>
+            </div>
+
+        </aside>
+
+        <!-- Goals Panel -->
+        <main class="goals-main">
+
+            <!-- Date Header -->
+            <div class="date-header">
+                <div>
+                    <div class="date-today" id="dateToday"></div>
+                    <div class="date-sub">เป้าหมายวันนี้</div>
+                </div>
+                <div class="today-xp" id="todayXP">+0 XP วันนี้</div>
+            </div>
+
+            <!-- Add Goal -->
+            <div class="panel add-goal-panel">
+                <div class="add-goal-row">
+                    <input type="text" id="goalInput" placeholder="✏️ เพิ่มเป้าหมายใหม่..." onkeydown="if(event.key==='Enter') addGoal()">
+                    <button onclick="addGoal()" class="btn-add-goal">+ เพิ่ม</button>
+                </div>
+            </div>
+
+            <!-- Goals List -->
+            <div class="panel goals-list-panel">
+                <div class="goals-list-header">
+                    <span class="panel-title">รายการเป้าหมาย</span>
+                    <span class="goals-progress-text" id="goalsProgressText">0/0 เสร็จแล้ว</span>
+                </div>
+                <div class="goals-progress-bar-wrap">
+                    <div class="goals-progress-bar" id="goalsProgressBar"></div>
+                </div>
+                <ul class="goals-list" id="goalsList"></ul>
+                <div class="empty-state" id="emptyState">
+                    <div class="empty-emoji">🎯</div>
+                    <p>ยังไม่มีเป้าหมายวันนี้<br>เพิ่มเลยสิ!</p>
+                </div>
+            </div>
+
+            <!-- All Done Banner -->
+            <div class="all-done-banner" id="allDoneBanner">
+                <div class="all-done-emoji">🎉</div>
+                <div>
+                    <div class="all-done-title">ทำสำเร็จทุกเป้าหมายแล้ว!</div>
+                    <div class="all-done-sub">เพื่อนของเธอภูมิใจมากเลย 🌸</div>
+                </div>
+                <div class="all-done-xp" id="allDoneXP">+0 XP</div>
+            </div>
+
+            <!-- History -->
+            <div class="panel">
+                <p class="panel-title">📅 ประวัติ 7 วันล่าสุด</p>
+                <div class="history-row" id="historyRow"></div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Level Up Modal -->
+    <div class="levelup-overlay" id="levelupOverlay">
+        <div class="levelup-box">
+            <div class="levelup-sparkles">✨✨✨</div>
+            <div class="levelup-pet" id="levelupPet">🐣</div>
+            <div class="levelup-title">วิวัฒนาการแล้ว!</div>
+            <div class="levelup-sub" id="levelupSub">กลายเป็น ลูกไก่น้อย</div>
+            <button onclick="closeLevelUp()" class="btn-primary" style="width:auto;padding:10px 32px">ว้าว! 🎉</button>
+        </div>
+    </div>
+
+    <div id="toast"></div>
+    <script src="goals.js"></script>
+</body>
+</html>
