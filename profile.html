@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduTask — โปรไฟล์</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="profile.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@200;300;400;500;600;700&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="nav-brand">
+            <span>📚</span>
+            <span class="brand-name">EduTask</span>
+        </div>
+        <div class="nav-links">
+            <a href="index.html" class="nav-link">📋 งาน</a>
+            <a href="goals.html" class="nav-link">🎯 เป้าหมาย</a>
+            <a href="schedule.html" class="nav-link">📅 ตารางเรียน</a>
+            <a href="battle.html" class="nav-link">⚔️ ต่อสู้</a>
+            <a href="profile.html" class="nav-link active">👤 โปรไฟล์</a>
+        </div>
+        <div class="nav-actions">
+            <button id="themeToggle" onclick="toggleTheme()" class="btn-icon">🌙</button>
+            <button onclick="logout()" class="btn-logout">🚪 ออกจากระบบ</button>
+        </div>
+    </nav>
+
+    <div class="profile-wrap">
+
+        <!-- Profile Hero -->
+        <div class="profile-hero">
+            <div class="profile-avatar" id="profileAvatar">🥚</div>
+            <div class="profile-name" id="profileName">ผู้ใช้</div>
+            <div class="profile-rank" id="profileRank">ไข่ปริศนา · Lv.0</div>
+            <div class="profile-since" id="profileSince"></div>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="profile-stats" id="profileStats"></div>
+
+        <!-- Settings -->
+        <div class="panel">
+            <p class="panel-title">⚙️ การตั้งค่า</p>
+            <div class="setting-row">
+                <div>
+                    <div class="setting-name">🔊 เสียงเอฟเฟกต์</div>
+                    <div class="setting-desc">เล่นเสียงเมื่อทำงานเสร็จ</div>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="soundToggle" onchange="toggleSound()">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="setting-row">
+                <div>
+                    <div class="setting-name">🎨 ธีมสว่าง</div>
+                    <div class="setting-desc">สลับโหมดมืด/สว่าง</div>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="themeToggleSwitch" onchange="toggleThemeSwitch()">
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+
+        <!-- Data -->
+        <div class="panel">
+            <p class="panel-title">💾 ข้อมูลและสำรองข้อมูล</p>
+            <p class="data-note">ข้อมูลทั้งหมดเก็บไว้ในเบราว์เซอร์นี้เท่านั้น แนะนำให้สำรองไว้กันหาย หรือย้ายไปเครื่องอื่น</p>
+            <div class="data-btns">
+                <button class="data-btn export" onclick="exportData()">⬇️ ดาวน์โหลดสำรองข้อมูล</button>
+                <button class="data-btn import" onclick="document.getElementById('importFile').click()">⬆️ กู้คืนจากไฟล์</button>
+                <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
+            </div>
+            <button class="data-btn reset" onclick="resetData()">🗑️ ล้างข้อมูลทั้งหมด</button>
+        </div>
+
+    </div>
+
+    <div id="toast"></div>
+    <script src="sound.js"></script>
+    <script src="profile.js"></script>
+</body>
+</html>

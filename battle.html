@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduTask — Battle Arena</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="battle.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@200;300;400;500;600;700&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="nav-brand">
+            <span>📚</span>
+            <span class="brand-name">EduTask</span>
+        </div>
+        <div class="nav-links">
+            <a href="index.html" class="nav-link">📋 งาน</a>
+            <a href="goals.html" class="nav-link">🎯 เป้าหมาย</a>
+            <a href="schedule.html" class="nav-link">📅 ตารางเรียน</a>
+            <a href="battle.html" class="nav-link active">⚔️ ต่อสู้</a>
+            <a href="profile.html" class="nav-link">👤 โปรไฟล์</a>
+        </div>
+        <div class="nav-actions">
+            <button id="themeToggle" onclick="toggleTheme()" class="btn-icon">🌙</button>
+            <button onclick="logout()" class="btn-logout">🚪 ออกจากระบบ</button>
+        </div>
+    </nav>
+
+    <!-- ===== LOBBY VIEW ===== -->
+    <div class="battle-wrap" id="lobbyView">
+
+        <!-- Active Fighter -->
+        <div class="fighter-hero">
+            <div class="fighter-badge">นักสู้ของเธอ</div>
+            <div class="fighter-emoji" id="lobbyFighterEmoji">🥚</div>
+            <div class="fighter-name" id="lobbyFighterName">ไข่ปริศนา</div>
+            <div class="fighter-lvl-row">
+                <span class="fighter-lvl" id="lobbyFighterLvl">Lv.1</span>
+                <div class="fighter-xpbar"><div class="fighter-xpfill" id="lobbyXpFill"></div></div>
+                <span class="fighter-xptext" id="lobbyXpText">0/100</span>
+            </div>
+            <div class="fighter-stats-row">
+                <span>❤️ HP <b id="lobbyHP">100</b></span>
+                <span>⚔️ ATK <b id="lobbyATK">20</b></span>
+                <span>🌪️ <b id="lobbyElem">ไม้</b></span>
+                <span>✨ <b id="lobbySkill">โจมตีธรรมดา</b></span>
+            </div>
+            <div class="lobby-coins">🪙 เหรียญ: <b id="coinDisplay">0</b></div>
+        </div>
+
+        <!-- Equipment -->
+        <div class="panel">
+            <p class="panel-title">🗡️ อุปกรณ์ที่สวมใส่</p>
+            <div class="equip-slots" id="equipSlots"></div>
+        </div>
+
+        <!-- Daily Quests -->
+        <div class="panel">
+            <p class="panel-title">📜 เควสรายวัน <span class="quest-refresh">รีเซ็ตทุกวัน</span></p>
+            <div class="quest-list" id="questList"></div>
+        </div>
+
+        <!-- Tower -->
+        <div class="panel tower-panel">
+            <p class="panel-title">🗼 หอคอยไร้จุดจบ</p>
+            <div class="tower-info">
+                <div class="tower-stat">
+                    <div class="tower-num" id="towerFloor">1</div>
+                    <div class="tower-lbl">ชั้นปัจจุบัน</div>
+                </div>
+                <div class="tower-stat">
+                    <div class="tower-num" id="towerBest">0</div>
+                    <div class="tower-lbl">สถิติสูงสุด</div>
+                </div>
+            </div>
+            <div class="tower-next" id="towerNext"></div>
+            <div class="tower-btns">
+                <button class="btn-primary" onclick="startTower()">🗼 ท้าทายชั้นต่อไป</button>
+                <button class="tower-reset" onclick="resetTower()">↺ เริ่มชั้น 1 ใหม่</button>
+            </div>
+            <p class="tower-hint">ทุก 5 ชั้นเจอบอส · ทุก 10 ชั้นเจอเจ้าหอคอย! ยิ่งลึกยิ่งโหด ยิ่งรางวัลเยอะ</p>
+        </div>
+
+        <!-- Bag -->
+        <div class="panel">
+            <p class="panel-title">🎒 กระเป๋าสัตว์เลี้ยง</p>
+            <div class="bag-grid" id="bagGrid"></div>
+        </div>
+
+        <!-- Enemy Select -->
+        <div class="panel">
+            <p class="panel-title">⚔️ เลือกศัตรู</p>
+            <div class="enemy-grid" id="enemyGrid"></div>
+        </div>
+
+        <!-- Shop -->
+        <div class="panel">
+            <p class="panel-title">🛒 ร้านอาวุธและไอเทม</p>
+            <div class="shop-section-label">⚔️ อาวุธ / เกราะ / เครื่องราง</div>
+            <div class="shopitem-grid" id="itemShop"></div>
+            <div class="shop-section-label" style="margin-top:16px">🧪 ยาฟื้นพลัง (ใช้ตอนสู้)</div>
+            <div class="shopitem-grid" id="potionShop"></div>
+        </div>
+
+        <!-- Skins -->
+        <div class="panel">
+            <p class="panel-title">🎨 สกินสะสม</p>
+            <div class="skin-grid" id="skinGrid"></div>
+        </div>
+
+    </div>
+
+    <!-- ===== BATTLE VIEW ===== -->
+    <div class="arena" id="battleView" style="display:none">
+        <div class="arena-bg"></div>
+
+        <!-- Enemy (top) -->
+        <div class="arena-side enemy-side">
+            <div class="combatant-info enemy-info">
+                <div class="combatant-name" id="enemyName">มอนสเตอร์</div>
+                <div class="hp-bar-wrap">
+                    <div class="hp-bar enemy-hp" id="enemyHpBar"></div>
+                </div>
+                <div class="hp-text" id="enemyHpText">100/100</div>
+            </div>
+            <div class="combatant-sprite enemy-sprite" id="enemySprite">👾</div>
+        </div>
+
+        <!-- Player (bottom) -->
+        <div class="arena-side player-side">
+            <div class="combatant-sprite player-sprite" id="playerSprite">🐉</div>
+            <div class="combatant-info player-info">
+                <div class="combatant-name" id="playerName">นักสู้</div>
+                <div class="hp-bar-wrap">
+                    <div class="hp-bar player-hp" id="playerHpBar"></div>
+                </div>
+                <div class="hp-text" id="playerHpText">100/100</div>
+            </div>
+        </div>
+
+        <!-- Battle Log -->
+        <div class="battle-log" id="battleLog"></div>
+
+        <!-- Action Menu -->
+        <div class="potion-btns" id="potionBtns"></div>
+        <div class="action-menu" id="actionMenu">
+            <button class="action-btn atk" onclick="playerAttack('normal')">⚔️ โจมตี</button>
+            <button class="action-btn skill" onclick="playerAttack('skill')" id="skillBtn">✨ สกิลพิเศษ</button>
+            <button class="action-btn flee" onclick="fleeBattle()">🏃 หนี</button>
+        </div>
+    </div>
+
+    <!-- Result Modal -->
+    <div class="result-overlay" id="resultOverlay">
+        <div class="result-box" id="resultBox">
+            <div class="result-emoji" id="resultEmoji">🏆</div>
+            <div class="result-title" id="resultTitle">ชนะ!</div>
+            <div class="result-rewards" id="resultRewards"></div>
+            <button onclick="closeBattle()" class="btn-primary" style="width:auto;padding:11px 36px">กลับสนาม</button>
+        </div>
+    </div>
+
+    <div id="toast"></div>
+    <script src="confetti.js"></script>
+    <script src="sound.js"></script>
+    <script src="battle.js"></script>
+</body>
+</html>

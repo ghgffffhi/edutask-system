@@ -6,7 +6,7 @@
     <title>EduTask</title>
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@200;300;400;500;600;700&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
 
@@ -19,6 +19,9 @@
         <div class="nav-links">
             <a href="index.html" class="nav-link active">📋 งาน</a>
             <a href="goals.html" class="nav-link">🎯 เป้าหมาย</a>
+            <a href="schedule.html" class="nav-link">📅 ตารางเรียน</a>
+            <a href="battle.html" class="nav-link">⚔️ ต่อสู้</a>
+            <a href="profile.html" class="nav-link">👤 โปรไฟล์</a>
         </div>
         <div class="nav-actions">
             <button id="themeToggle" onclick="toggleTheme()" class="btn-icon">🌙</button>
@@ -26,7 +29,6 @@
         </div>
     </nav>
 
-    <!-- Main Layout -->
     <div class="main-layout">
 
         <!-- Sidebar -->
@@ -34,7 +36,7 @@
 
             <!-- Dashboard -->
             <div class="panel">
-                <p class="panel-title">ภาพรวม</p>
+                <p class="panel-title">📊 ภาพรวม</p>
                 <div class="dashboard">
                     <div class="stat-card">
                         <h3 id="totalTasks">0</h3>
@@ -55,33 +57,63 @@
                 <p id="progressText" class="progress-text">0% เสร็จแล้ว</p>
             </div>
 
+            <!-- Focus Timer -->
+            <div class="panel focus-panel">
+                <p class="panel-title">🍅 โหมดโฟกัส</p>
+                <div class="focus-presets">
+                    <button class="focus-preset active" onclick="setFocusPreset(25,this)">25 นาที</button>
+                    <button class="focus-preset" onclick="setFocusPreset(15,this)">15 นาที</button>
+                    <button class="focus-preset" onclick="setFocusPreset(5,this)">พัก 5</button>
+                </div>
+                <div class="focus-ring-wrap">
+                    <svg class="focus-ring" viewBox="0 0 100 100">
+                        <defs>
+                            <linearGradient id="focusGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#2dd4bf"/>
+                                <stop offset="50%" stop-color="#818cf8"/>
+                                <stop offset="100%" stop-color="#a78bfa"/>
+                            </linearGradient>
+                        </defs>
+                        <circle class="focus-ring-bg" cx="50" cy="50" r="44"/>
+                        <circle class="focus-ring-fill" id="focusRingFill" cx="50" cy="50" r="44"
+                            stroke-dasharray="276.46" stroke-dashoffset="0"/>
+                    </svg>
+                    <div class="focus-center">
+                        <div class="focus-time" id="focusTime">25:00</div>
+                        <div class="focus-state" id="focusState">พร้อมลุย</div>
+                    </div>
+                </div>
+                <div class="focus-controls">
+                    <button class="focus-btn start" id="focusStartBtn" onclick="toggleFocus()">▶ เริ่ม</button>
+                    <button class="focus-btn reset" onclick="resetFocus()">↻</button>
+                </div>
+                <p class="focus-today">โฟกัสวันนี้ <b id="focusTodayMin">0</b> นาที · <b id="focusSessions">0</b> รอบ</p>
+            </div>
+
             <!-- Calendar -->
             <div class="panel">
                 <p class="panel-title">📅 งานที่กำลังจะมาถึง</p>
                 <div id="calendarPreview"></div>
             </div>
 
-            <!-- AI Box -->
-            <div class="panel ai-panel">
-                <p class="panel-title">✨ AI ผู้ช่วย</p>
-
-                <div class="apikey-row">
-                    <input type="password" id="apiKeyInput" placeholder="🔑 วาง Gemini API Key ที่นี่">
-                    <button onclick="saveApiKey()" class="btn-save-key">บันทึก</button>
-                </div>
-                <p id="apiKeyStatus" class="apikey-hint">
-                    ขอ Key ฟรีได้ที่ <a href="https://aistudio.google.com" target="_blank">aistudio.google.com</a>
-                </p>
-
-                <textarea id="aiInput" placeholder="ถาม AI เช่น สรุปเรื่องแรงและการเคลื่อนที่ให้หน่อย" style="margin-top:10px"></textarea>
-                <button onclick="askAI()" class="btn-ai">✨ ถาม AI</button>
-                <div id="aiResponse"></div>
-            </div>
-
         </aside>
 
         <!-- Main Content -->
         <main class="main-content">
+
+            <!-- Greeting -->
+            <div class="greeting-card">
+                <div class="greeting-text" id="greetingText">สวัสดี! 👋</div>
+                <div class="greeting-sub" id="greetingSub"></div>
+                <div class="greeting-nextclass" id="greetingNextClass" style="display:none"></div>
+                <div class="greeting-quote" id="greetingQuote"></div>
+            </div>
+
+            <!-- Weekly Chart -->
+            <div class="panel">
+                <p class="panel-title">📈 งานที่ทำเสร็จ 7 วันล่าสุด</p>
+                <div class="week-chart" id="weekChart"></div>
+            </div>
 
             <!-- Add Task -->
             <div class="panel">
@@ -119,11 +151,17 @@
 
             <!-- Task List -->
             <ul id="taskList"></ul>
+            <div class="task-empty" id="taskEmpty" style="display:none">
+                <div class="e-emoji">🗂️</div>
+                <p>ยังไม่มีงานในระบบ<br>เพิ่มงานแรกของเธอเลย!</p>
+            </div>
 
         </main>
     </div>
 
     <div id="toast"></div>
+    <script src="confetti.js"></script>
+    <script src="sound.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

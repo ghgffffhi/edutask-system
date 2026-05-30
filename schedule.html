@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduTask — ตารางเรียน</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="schedule.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@200;300;400;500;600;700&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="nav-brand">
+            <span>📚</span>
+            <span class="brand-name">EduTask</span>
+        </div>
+        <div class="nav-links">
+            <a href="index.html" class="nav-link">📋 งาน</a>
+            <a href="goals.html" class="nav-link">🎯 เป้าหมาย</a>
+            <a href="schedule.html" class="nav-link active">📅 ตารางเรียน</a>
+            <a href="battle.html" class="nav-link">⚔️ ต่อสู้</a>
+            <a href="profile.html" class="nav-link">👤 โปรไฟล์</a>
+        </div>
+        <div class="nav-actions">
+            <button id="themeToggle" onclick="toggleTheme()" class="btn-icon">🌙</button>
+            <button onclick="logout()" class="btn-logout">🚪 ออกจากระบบ</button>
+        </div>
+    </nav>
+
+    <div class="schedule-wrap">
+
+        <!-- Next Class Banner -->
+        <div class="next-class-banner" id="nextClassBanner">
+            <div class="nc-icon">⏰</div>
+            <div class="nc-text">
+                <div class="nc-label">คาบต่อไป</div>
+                <div class="nc-detail" id="nextClassDetail">กำลังโหลด...</div>
+            </div>
+            <div class="nc-time" id="nextClassTime"></div>
+        </div>
+
+        <!-- Add Class -->
+        <div class="panel">
+            <p class="panel-title">➕ เพิ่มคาบเรียน</p>
+            <div class="sched-form">
+                <div class="sched-form-row">
+                    <select id="dayInput">
+                        <option value="1">จันทร์</option>
+                        <option value="2">อังคาร</option>
+                        <option value="3">พุธ</option>
+                        <option value="4">พฤหัสบดี</option>
+                        <option value="5">ศุกร์</option>
+                    </select>
+                    <input type="text" id="subjectName" placeholder="ชื่อวิชา เช่น คณิตศาสตร์">
+                </div>
+                <div class="sched-form-row">
+                    <input type="time" id="startTime" value="08:30">
+                    <input type="time" id="endTime" value="09:30">
+                </div>
+                <div class="sched-form-row">
+                    <input type="text" id="roomInput" placeholder="ห้อง (ถ้ามี)">
+                    <input type="text" id="teacherInput" placeholder="ครูผู้สอน (ถ้ามี)">
+                </div>
+                <div class="color-picker" id="colorPicker"></div>
+                <button onclick="addClass()" class="btn-primary">+ เพิ่มคาบเรียน</button>
+            </div>
+        </div>
+
+        <!-- Timetable -->
+        <div class="timetable" id="timetable"></div>
+
+    </div>
+
+    <div id="toast"></div>
+    <script src="sound.js"></script>
+    <script src="schedule.js"></script>
+</body>
+</html>

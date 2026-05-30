@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="goals.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&family=Sriracha&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@200;300;400;500;600;700&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
 
@@ -19,6 +19,9 @@
         <div class="nav-links">
             <a href="index.html" class="nav-link">📋 งาน</a>
             <a href="goals.html" class="nav-link active">🎯 เป้าหมาย</a>
+            <a href="schedule.html" class="nav-link">📅 ตารางเรียน</a>
+            <a href="battle.html" class="nav-link">⚔️ ต่อสู้</a>
+            <a href="profile.html" class="nav-link">👤 โปรไฟล์</a>
         </div>
         <div class="nav-actions">
             <button id="themeToggle" onclick="toggleTheme()" class="btn-icon">🌙</button>
@@ -32,7 +35,6 @@
         <aside class="pet-panel">
 
             <div class="pet-card">
-                <!-- Stars bg -->
                 <div class="pet-stars">
                     <span class="star s1">✦</span>
                     <span class="star s2">✦</span>
@@ -45,6 +47,7 @@
 
                 <div class="pet-display" id="petDisplay">
                     <div class="pet-glow" id="petGlow"></div>
+                    <div class="pet-accessory" id="petAccessory" style="display:none"></div>
                     <div class="pet-emoji" id="petEmoji">🥚</div>
                     <div class="pet-shadow"></div>
                 </div>
@@ -55,12 +58,12 @@
             </div>
 
             <!-- Stats -->
-            <div class="stats-grid">
+            <div class="stats-grid stats-grid-3">
                 <div class="stat-pill streak">
                     <span class="stat-icon">🔥</span>
                     <div>
                         <div class="stat-num" id="streakCount">0</div>
-                        <div class="stat-lbl">วันติดต่อกัน</div>
+                        <div class="stat-lbl">วันติด <span id="freezeBadge" class="freeze-badge" style="display:none"></span></div>
                     </div>
                 </div>
                 <div class="stat-pill xp">
@@ -70,7 +73,16 @@
                         <div class="stat-lbl">XP รวม</div>
                     </div>
                 </div>
+                <div class="stat-pill coin">
+                    <span class="stat-icon">🪙</span>
+                    <div>
+                        <div class="stat-num" id="coinCount">0</div>
+                        <div class="stat-lbl">เหรียญ</div>
+                    </div>
+                </div>
             </div>
+
+            <button class="btn-shop" onclick="openShop()">🛍️ ร้านแต่งตัวสัตว์เลี้ยง</button>
 
             <!-- Evolution Progress -->
             <div class="evo-box">
@@ -102,7 +114,6 @@
         <!-- Goals Panel -->
         <main class="goals-main">
 
-            <!-- Date Header -->
             <div class="date-header">
                 <div>
                     <div class="date-today" id="dateToday"></div>
@@ -113,6 +124,7 @@
 
             <!-- Add Goal -->
             <div class="panel add-goal-panel">
+                <div class="difficulty-btns" id="difficultyBtns"></div>
                 <div class="add-goal-row">
                     <input type="text" id="goalInput" placeholder="✏️ เพิ่มเป้าหมายใหม่..." onkeydown="if(event.key==='Enter') addGoal()">
                     <button onclick="addGoal()" class="btn-add-goal">+ เพิ่ม</button>
@@ -122,7 +134,7 @@
             <!-- Goals List -->
             <div class="panel goals-list-panel">
                 <div class="goals-list-header">
-                    <span class="panel-title">รายการเป้าหมาย</span>
+                    <span class="panel-title">🎯 รายการเป้าหมาย</span>
                     <span class="goals-progress-text" id="goalsProgressText">0/0 เสร็จแล้ว</span>
                 </div>
                 <div class="goals-progress-bar-wrap">
@@ -145,6 +157,12 @@
                 <div class="all-done-xp" id="allDoneXP">+0 XP</div>
             </div>
 
+            <!-- Achievements -->
+            <div class="panel">
+                <p class="panel-title">🏅 ความสำเร็จ</p>
+                <div class="achievements-grid" id="achievementsGrid"></div>
+            </div>
+
             <!-- History -->
             <div class="panel">
                 <p class="panel-title">📅 ประวัติ 7 วันล่าสุด</p>
@@ -165,7 +183,24 @@
         </div>
     </div>
 
+    <!-- Shop Modal -->
+    <div class="shop-overlay" id="shopOverlay">
+        <div class="shop-box">
+            <div class="shop-header">
+                <div>
+                    <div class="shop-title">🛍️ ร้านค้า</div>
+                    <div class="shop-sub">ใช้เหรียญแต่งตัวให้สัตว์เลี้ยง</div>
+                </div>
+                <div class="shop-coins-display">🪙 <span id="shopCoins">0</span></div>
+            </div>
+            <div class="shop-grid" id="shopGrid"></div>
+            <button onclick="closeShop()" class="btn-close-shop">ปิด</button>
+        </div>
+    </div>
+
     <div id="toast"></div>
+    <script src="confetti.js"></script>
+    <script src="sound.js"></script>
     <script src="goals.js"></script>
 </body>
 </html>
