@@ -93,6 +93,7 @@ function toggleTask(index){
         showToast("🎉 ทำงานเสร็จแล้ว เก่งมาก!");
         fireConfetti();
         if(typeof playSound === "function") playSound("complete");
+        if(typeof chibiReact === "function") chibiReact("taskDone");
     } else {
         taskHistory[today] = Math.max(0, (taskHistory[today] || 0) - 1);
         showToast("↩ ยกเลิกสถานะแล้ว");
@@ -310,10 +311,12 @@ function toggleFocus(){
         focusRunning = false;
         document.getElementById("focusStartBtn").innerHTML = "▶ เริ่มต่อ";
         document.getElementById("focusState").textContent = "หยุดพัก";
+        if(typeof chibiReact === "function") chibiReact("focusPause");
     } else {
         focusRunning = true;
         document.getElementById("focusStartBtn").innerHTML = "⏸ พัก";
         document.getElementById("focusState").textContent = "กำลังโฟกัส";
+        if(typeof chibiReact === "function") chibiReact("focusStart");
         focusInterval = setInterval(() => {
             focusLeft--;
             updateFocusDisplay();
@@ -329,6 +332,7 @@ function toggleFocus(){
                 showToast("🍅 จบ 1 รอบโฟกัสแล้ว เก่งมาก!");
                 fireConfetti();
                 if(typeof playSound === "function") playSound("levelup");
+                if(typeof chibiReact === "function") chibiReact("focusDone");
                 focusLeft = focusTotal;
                 setTimeout(updateFocusDisplay, 1500);
             }
@@ -343,6 +347,7 @@ function resetFocus(){
     document.getElementById("focusStartBtn").innerHTML = "▶ เริ่ม";
     document.getElementById("focusState").textContent = "พร้อมลุย";
     updateFocusDisplay();
+    if(typeof chibiReact === "function") chibiReact("focusReset");
 }
 
 function updateFocusDisplay(){

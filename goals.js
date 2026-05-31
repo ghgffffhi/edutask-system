@@ -156,6 +156,7 @@ function toggleGoal(id){
         state.totalGoalsDone += 1;
         showToast(`⚡ +${goal.xp} XP  🪙 +${goal.coins}`);
         if(typeof playSound === "function") playSound("coin");
+        if(typeof chibiReact === "function") chibiReact("goal");
     } else {
         state.xp = Math.max(0, state.xp - goal.xp);
         state.todayXP = Math.max(0, state.todayXP - goal.xp);
@@ -448,6 +449,7 @@ function showLevelUp(idx){
     showToast(`🌟 วิวัฒนาการ! กลายเป็น ${stage.name}`);
     if(typeof fireConfetti === "function") fireConfetti();
     if(typeof playSound === "function") playSound("levelup");
+    if(typeof chibiReact === "function") chibiReact("levelUp");
     if(typeof renderAchievements === "function") renderAchievements();
 }
 function closeLevelUp(){ document.getElementById("levelupOverlay").classList.remove("show"); }

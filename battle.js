@@ -22,14 +22,29 @@ function elemMult(atkElem, defElem){
    FIGHTERS
    ========================================================= */
 const FIGHTERS = {
-    egg:    { emoji:'🥚', name:'ไข่ปริศนา',     hp:80,  atk:12, skill:'สั่นสะเทือน',  skillMult:1.4, hpG:8,  atkG:2, elem:'grass' },
-    chick:  { emoji:'🐣', name:'ลูกไก่น้อย',   hp:100, atk:16, skill:'จิกรัว',       skillMult:1.5, hpG:12, atkG:3, elem:'grass' },
-    cat:    { emoji:'🐱', name:'แมวน้อยจอมซน', hp:130, atk:22, skill:'ฟื้นพลัง',     skillMult:1.3, hpG:16, atkG:4, heal:true, elem:'water' },
-    fox:    { emoji:'🦊', name:'จิ้งจอกจอมเก่ง', hp:150, atk:28, skill:'ตีสองครั้ง',  skillMult:1.8, hpG:18, atkG:5, elem:'fire' },
-    dragon: { emoji:'🐉', name:'มังกรในตำนาน', hp:200, atk:38, skill:'พ่นไฟ',        skillMult:2.0, hpG:24, atkG:7, elem:'fire' },
-    golem:  { emoji:'🗿', name:'โกเลมหิน',      hp:260, atk:30, skill:'กำแพงหิน',     skillMult:1.6, hpG:26, atkG:6, elem:'grass' },
-    demon:  { emoji:'👹', name:'อสูรแดง',       hp:240, atk:48, skill:'เปลวนรก',      skillMult:2.2, hpG:24, atkG:9, elem:'fire' },
-    reaper: { emoji:'💀', name:'มัจจุราช',      hp:320, atk:60, skill:'เคียวสังหาร',  skillMult:2.5, hpG:34, atkG:12, elem:'water' }
+    egg:    { emoji:'🥚', name:'ไข่ปริศนา',     hp:80,  atk:12, skill:'สั่นสะเทือน',  skillMult:1.4, hpG:8,  atkG:2, elem:'grass', chibi:{ hair:'#fcd34d', hair2:'#fde68a', outfit:'#a3e635', outfit2:'#65a30d', style:'short', weapon:null } },
+    chick:  { emoji:'🐣', name:'ลูกไก่น้อย',   hp:100, atk:16, skill:'จิกรัว',       skillMult:1.5, hpG:12, atkG:3, elem:'grass', chibi:{ hair:'#fbbf24', hair2:'#fef08a', outfit:'#facc15', outfit2:'#ca8a04', style:'short', weapon:null } },
+    cat:    { emoji:'🐱', name:'แมวน้อยจอมซน', hp:130, atk:22, skill:'ฟื้นพลัง',     skillMult:1.3, hpG:16, atkG:4, heal:true, elem:'water', chibi:{ hair:'#93c5fd', hair2:'#dbeafe', outfit:'#38bdf8', outfit2:'#0ea5e9', style:'twin', weapon:'staff' } },
+    fox:    { emoji:'🦊', name:'จิ้งจอกจอมเก่ง', hp:150, atk:28, skill:'ตีสองครั้ง',  skillMult:1.8, hpG:18, atkG:5, elem:'fire', chibi:{ hair:'#fb923c', hair2:'#fed7aa', outfit:'#f97316', outfit2:'#c2410c', style:'twin', weapon:'sword' } },
+    dragon: { emoji:'🐉', name:'มังกรในตำนาน', hp:200, atk:38, skill:'พ่นไฟ',        skillMult:2.0, hpG:24, atkG:7, elem:'fire', chibi:{ hair:'#f87171', hair2:'#fca5a5', outfit:'#dc2626', outfit2:'#7f1d1d', style:'long', weapon:'spear' } },
+    golem:  { emoji:'🗿', name:'โกเลมหิน',      hp:260, atk:30, skill:'กำแพงหิน',     skillMult:1.6, hpG:26, atkG:6, elem:'grass', chibi:{ hair:'#a8a29e', hair2:'#d6d3d1', outfit:'#78716c', outfit2:'#44403c', style:'short', weapon:null } },
+    demon:  { emoji:'👹', name:'อสูรแดง',       hp:240, atk:48, skill:'เปลวนรก',      skillMult:2.2, hpG:24, atkG:9, elem:'fire', chibi:{ hair:'#dc2626', hair2:'#f87171', outfit:'#991b1b', outfit2:'#450a0a', style:'long', weapon:'scythe' } },
+    reaper: { emoji:'💀', name:'มัจจุราช',      hp:320, atk:60, skill:'เคียวสังหาร',  skillMult:2.5, hpG:34, atkG:12, elem:'water', chibi:{ hair:'#6366f1', hair2:'#a5b4fc', outfit:'#1e1b4b', outfit2:'#020617', style:'long', weapon:'scythe' } },
+    // ===== Gacha-only chibi fighters =====
+    sakura: { emoji:'🌸', name:'ซากุระจัง',     hp:140, atk:26, skill:'กลีบดาบ',     skillMult:1.7, hpG:17, atkG:5, elem:'grass', rarity:'R',  gacha:true, chibi:{ hair:'#f472b6', hair2:'#fbcfe8', outfit:'#ec4899', outfit2:'#be185d', style:'twin', weapon:'sword' } },
+    yuki:   { emoji:'❄️', name:'ยูกิหิมะ',      hp:160, atk:24, skill:'พายุน้ำแข็ง', skillMult:1.8, hpG:18, atkG:5, heal:true, elem:'water', rarity:'SR', gacha:true, chibi:{ hair:'#a5f3fc', hair2:'#ecfeff', outfit:'#06b6d4', outfit2:'#0e7490', style:'long', weapon:'staff' } },
+    hana:   { emoji:'🌺', name:'ฮานะดอกไม้',    hp:155, atk:27, skill:'พรพฤกษา',     skillMult:1.7, hpG:18, atkG:5, heal:true, elem:'grass', rarity:'SR', gacha:true, chibi:{ hair:'#4ade80', hair2:'#bbf7d0', outfit:'#16a34a', outfit2:'#14532d', style:'bun', weapon:'staff' } },
+    akari:  { emoji:'🔆', name:'อาคาริเปลวไฟ',  hp:165, atk:34, skill:'ระบำเพลิง',   skillMult:2.0, hpG:19, atkG:6, elem:'fire', rarity:'SSR', gacha:true, chibi:{ hair:'#fb7185', hair2:'#fecdd3', outfit:'#e11d48', outfit2:'#881337', style:'twin', weapon:'spear' } },
+    luna:   { emoji:'🌙', name:'ลูน่าจันทรา',   hp:180, atk:36, skill:'แสงจันทร์',   skillMult:2.1, hpG:20, atkG:7, heal:true, elem:'water', rarity:'SSR', gacha:true, chibi:{ hair:'#c4b5fd', hair2:'#ede9fe', outfit:'#7c3aed', outfit2:'#4c1d95', style:'long', weapon:'staff' } },
+    hoshi:  { emoji:'⭐', name:'โฮชิดารา',       hp:200, atk:42, skill:'ฝนดาวตก',     skillMult:2.3, hpG:22, atkG:8, elem:'grass', rarity:'UR', gacha:true, chibi:{ hair:'#fde047', hair2:'#fef9c3', outfit:'#eab308', outfit2:'#854d0e', style:'twin', weapon:'bow' } }
+};
+
+/* rarity weights for gacha (higher = more common) */
+const RARITY = {
+    R:   { weight: 60, color:'#60a5fa', label:'R' },
+    SR:  { weight: 28, color:'#a78bfa', label:'SR' },
+    SSR: { weight: 10, color:'#fbbf24', label:'SSR' },
+    UR:  { weight: 2,  color:'#fb7185', label:'UR' }
 };
 
 /* =========================================================
@@ -49,16 +64,23 @@ const ENEMIES = {
    ========================================================= */
 const ITEMS = {
     // weapons (+ATK)
-    dagger:  { emoji:'🗡️', name:'มีดสั้น',     slot:'weapon', atk:6,  hp:0,  price:60,  elem:null },
-    sword:   { emoji:'⚔️', name:'ดาบคู่',       slot:'weapon', atk:14, hp:0,  price:160, elem:null },
-    fireStaff:{emoji:'🔥', name:'คทาเพลิง',     slot:'weapon', atk:20, hp:0,  price:280, elem:'fire' },
-    bow:     { emoji:'🏹', name:'ธนูสายฟ้า',    slot:'weapon', atk:26, hp:0,  price:400, elem:null },
+    dagger:   { emoji:'🗡️', name:'มีดสั้น',      slot:'weapon', atk:6,  hp:0,  price:60,  elem:null },
+    sword:    { emoji:'⚔️', name:'ดาบคู่',        slot:'weapon', atk:14, hp:0,  price:160, elem:null },
+    fireStaff:{ emoji:'🔥', name:'คทาเพลิง',      slot:'weapon', atk:20, hp:0,  price:280, elem:'fire' },
+    iceWand:  { emoji:'❄️', name:'คทาน้ำแข็ง',    slot:'weapon', atk:20, hp:0,  price:280, elem:'water' },
+    vineWhip: { emoji:'🌿', name:'แส้พฤกษา',      slot:'weapon', atk:20, hp:0,  price:280, elem:'grass' },
+    bow:      { emoji:'🏹', name:'ธนูสายฟ้า',     slot:'weapon', atk:26, hp:0,  price:400, elem:null },
+    katana:   { emoji:'🗡️', name:'คาตานะศักดิ์สิทธิ์', slot:'weapon', atk:34, hp:0, price:600, elem:null },
+    excalibur:{ emoji:'⚔️', name:'ดาบเอกซ์คาลิเบอร์', slot:'weapon', atk:46, hp:10, price:1000, elem:null },
     // armor (+HP)
-    shield:  { emoji:'🛡️', name:'โล่เหล็ก',     slot:'armor',  atk:0,  hp:40,  price:120, elem:null },
-    plate:   { emoji:'🥋', name:'เกราะนักรบ',   slot:'armor',  atk:0,  hp:90,  price:260, elem:null },
+    shield:   { emoji:'🛡️', name:'โล่เหล็ก',      slot:'armor',  atk:0,  hp:40,  price:120, elem:null },
+    plate:    { emoji:'🥋', name:'เกราะนักรบ',    slot:'armor',  atk:0,  hp:90,  price:260, elem:null },
+    aegis:    { emoji:'🛡️', name:'โล่เทพีอีจิส',  slot:'armor',  atk:5,  hp:150, price:520, elem:null },
+    dragonArmor:{ emoji:'🐲', name:'เกราะมังกร',  slot:'armor',  atk:12, hp:220, price:900, elem:null },
     // charms (+ATK & +HP)
-    ring:    { emoji:'💍', name:'แหวนเวท',      slot:'charm',  atk:8,  hp:30,  price:300, elem:null },
-    crystal: { emoji:'🔮', name:'คริสตัลพลัง',  slot:'charm',  atk:15, hp:60,  price:500, elem:null }
+    ring:     { emoji:'💍', name:'แหวนเวท',       slot:'charm',  atk:8,  hp:30,  price:300, elem:null },
+    crystal:  { emoji:'🔮', name:'คริสตัลพลัง',   slot:'charm',  atk:15, hp:60,  price:500, elem:null },
+    star:     { emoji:'⭐', name:'ดาวนำโชค',      slot:'charm',  atk:22, hp:100, price:850, elem:null }
 };
 
 /* =========================================================
@@ -75,6 +97,48 @@ const POTIONS = {
 const SKINS = {
     reaper_skin: { emoji:'😈', name:'วิญญาณมัจจุราช', from:'ล้มมัจจุราช' }
 };
+
+/* =========================================================
+   LEADERBOARD — local, with simulated rival climbers
+   (no server needed — rivals are generated & nudged daily)
+   ========================================================= */
+const RIVAL_NAMES = ["มิว","ปลื้ม","ฟ้า","เจได","น้ำหวาน","โบนัส","กาแฟ","ขนมจีน","ไอติม","พีช","มะนาว","ตูน"];
+function seedRivals(){
+    let board = JSON.parse(localStorage.getItem("towerBoard") || "null");
+    let today = todayStr();
+    if(!board){
+        // create 7 rivals with random best floors
+        let picked = [...RIVAL_NAMES].sort(()=>Math.random()-0.5).slice(0,7);
+        board = { date: today, rivals: picked.map(n=>({ name:n, floor: 1 + Math.floor(Math.random()*9) })) };
+    }
+    // each new day, rivals climb a little (1-3 floors) so the board feels alive
+    if(board.date !== today){
+        board.rivals.forEach(r=> r.floor += 1 + Math.floor(Math.random()*3));
+        board.date = today;
+    }
+    localStorage.setItem("towerBoard", JSON.stringify(board));
+    return board;
+}
+
+function renderLeaderboard(){
+    let el = document.getElementById("leaderboard");
+    if(!el) return;
+    let board = seedRivals();
+    let me = { name:"เธอ (ฉัน)", floor: battle.towerBest || 0, isMe:true };
+    let all = [...board.rivals.map(r=>({...r})), me].sort((a,b)=> b.floor - a.floor);
+    el.innerHTML = "";
+    all.forEach((p,i)=>{
+        let medal = i===0?"🥇":i===1?"🥈":i===2?"🥉":`${i+1}`;
+        let row = document.createElement("div");
+        row.className = "lb-row" + (p.isMe?" lb-me":"");
+        row.innerHTML = `
+            <div class="lb-rank">${medal}</div>
+            <div class="lb-name">${p.name}</div>
+            <div class="lb-floor">ชั้น ${p.floor}</div>
+        `;
+        el.appendChild(row);
+    });
+}
 
 /* =========================================================
    TOWER — endless climbing floors, scaling difficulty
@@ -125,7 +189,8 @@ let battle = JSON.parse(localStorage.getItem("battleState")) || {
     equip: { weapon:null, armor:null, charm:null },
     potions: { smallPot:0, bigPot:0 },
     towerFloor: 1, towerBest: 0,
-    quests: null, questDate: ""
+    quests: null, questDate: "",
+    gachaTickets: 1, gachaPity: 0
 };
 migrateBattle();
 
@@ -140,6 +205,8 @@ function migrateBattle(){
     if(battle.towerBest === undefined) battle.towerBest = 0;
     if(battle.quests === undefined) battle.quests = null;
     if(battle.questDate === undefined) battle.questDate = "";
+    if(battle.gachaTickets === undefined) battle.gachaTickets = 1;
+    if(battle.gachaPity === undefined) battle.gachaPity = 0;
     rollDailyQuests();
     syncPetUnlocks();
 }
@@ -259,6 +326,7 @@ function renderLobby(){
 
     renderQuests();
     renderTower();
+    renderGacha();
     renderEquip();
     renderBag();
     renderEnemies();
@@ -312,6 +380,7 @@ function renderTower(){
     let next = towerEnemy(battle.towerFloor);
     document.getElementById("towerNext").innerHTML =
         `ชั้นต่อไป: ${next.emoji} ${next.name} <span style="color:${ELEMENTS[next.elem].color}">${ELEMENTS[next.elem].icon}</span> · ❤️${next.hp} ⚔️${next.atk}`;
+    renderLeaderboard();
 }
 
 function renderEquip(){
@@ -347,9 +416,14 @@ function renderBag(){
         let div = document.createElement("div");
         div.className = "bag-card" + (active ? " active" : "");
         div.onclick = () => selectFighter(id);
+        let avatar = (f.chibi && typeof chibiFighterSVG === "function")
+            ? `<div class="bag-chibi">${chibiFighterSVG(f.chibi, "idle")}</div>`
+            : `<div class="bag-emoji">${f.emoji}</div>`;
+        let rarityTag = f.rarity ? `<div class="bag-rarity r-${f.rarity}">${f.rarity}</div>` : '';
         div.innerHTML = `
             ${active ? '<div class="bag-active-tag">กำลังใช้</div>' : ''}
-            <div class="bag-emoji">${f.emoji}</div>
+            ${rarityTag}
+            ${avatar}
             <div class="bag-name">${f.name}</div>
             <div class="bag-elem" style="color:${ELEMENTS[f.elem].color}">${ELEMENTS[f.elem].icon} ${ELEMENTS[f.elem].name}</div>
             <div class="bag-stats">❤️${st.hp} ⚔️${st.atk}</div>
@@ -428,6 +502,97 @@ function renderShop(){
         `;
         potGrid.appendChild(div);
     });
+}
+
+/* =========================================================
+   GACHA — summon chibi fighters with coins or tickets
+   ========================================================= */
+const GACHA_COST_COINS = 200;
+const PITY_THRESHOLD = 10; // guaranteed SSR+ within this many pulls
+
+function renderGacha(){
+    document.getElementById("gachaTickets").textContent = battle.gachaTickets || 0;
+    document.getElementById("gachaCoinCost").textContent = GACHA_COST_COINS;
+    let pity = battle.gachaPity || 0;
+    document.getElementById("gachaPity").textContent = `${pity}/${PITY_THRESHOLD}`;
+    // preview pool
+    let pool = Object.keys(FIGHTERS).filter(id=>FIGHTERS[id].gacha);
+    let owned = pool.filter(id=>battle.unlocked.includes(id)).length;
+    document.getElementById("gachaCollected").textContent = `${owned}/${pool.length}`;
+}
+
+function rollRarity(){
+    // pity: force SSR/UR if threshold reached
+    if((battle.gachaPity || 0) >= PITY_THRESHOLD - 1){
+        return Math.random() < 0.7 ? 'SSR' : 'UR';
+    }
+    let total = Object.values(RARITY).reduce((a,r)=>a+r.weight,0);
+    let roll = Math.random() * total;
+    for(let key of Object.keys(RARITY)){
+        roll -= RARITY[key].weight;
+        if(roll <= 0) return key;
+    }
+    return 'R';
+}
+
+function doGacha(payType){
+    // check cost
+    if(payType === "ticket"){
+        if((battle.gachaTickets||0) < 1){ showToast("🎫 ไม่มีตั๋วกาชา!"); return; }
+    } else {
+        if(getCoins() < GACHA_COST_COINS){ showToast("🪙 เหรียญไม่พอ!"); if(typeof playSound==="function") playSound("error"); return; }
+    }
+
+    let pool = Object.keys(FIGHTERS).filter(id=>FIGHTERS[id].gacha);
+    let rarity = rollRarity();
+    let candidates = pool.filter(id=>FIGHTERS[id].rarity === rarity);
+    if(candidates.length === 0) candidates = pool; // fallback
+    let win = candidates[Math.floor(Math.random()*candidates.length)];
+    let f = FIGHTERS[win];
+    let dup = battle.unlocked.includes(win);
+
+    // pay
+    if(payType === "ticket") battle.gachaTickets--;
+    else spendCoins(GACHA_COST_COINS);
+
+    // pity update
+    if(rarity === 'SSR' || rarity === 'UR') battle.gachaPity = 0;
+    else battle.gachaPity = (battle.gachaPity || 0) + 1;
+
+    // grant
+    let coinBack = 0;
+    if(dup){
+        coinBack = { R:30, SR:60, SSR:120, UR:250 }[rarity] || 30;
+        addCoins(coinBack);
+    } else {
+        battle.unlocked.push(win);
+    }
+    save();
+    showGachaResult(win, rarity, dup, coinBack, payType);
+}
+
+function showGachaResult(winId, rarity, dup, coinBack, payType){
+    let f = FIGHTERS[winId];
+    let rc = RARITY[rarity];
+    let overlay = document.getElementById("gachaOverlay");
+    let box = document.getElementById("gachaResultBox");
+    box.className = "gacha-result-box reveal r-border-" + rarity;
+    let avatar = (f.chibi && typeof chibiFighterSVG === "function") ? chibiFighterSVG(f.chibi,"idle") : `<div style="font-size:80px">${f.emoji}</div>`;
+    document.getElementById("gachaResultInner").innerHTML = `
+        <div class="gacha-rarity-badge" style="background:${rc.color}">${rc.label}</div>
+        <div class="gacha-result-chibi">${avatar}</div>
+        <div class="gacha-result-name">${f.name}</div>
+        <div class="gacha-result-elem" style="color:${ELEMENTS[f.elem].color}">${ELEMENTS[f.elem].icon} ${ELEMENTS[f.elem].name} · ✨ ${f.skill}</div>
+        ${dup ? `<div class="gacha-dup">ได้ซ้ำ! แปลงเป็น 🪙 +${coinBack}</div>` : `<div class="gacha-new">🎉 ตัวละครใหม่!</div>`}
+    `;
+    overlay.classList.add("show");
+    if(rarity === 'SSR' || rarity === 'UR'){ if(typeof fireConfetti==="function") fireConfetti(); }
+    if(typeof playSound === "function") playSound(rarity === 'R' ? "click" : "levelup");
+}
+
+function closeGacha(){
+    document.getElementById("gachaOverlay").classList.remove("show");
+    renderLobby();
 }
 
 function renderSkins(){
@@ -527,8 +692,15 @@ function startBattleWith(e, isTower){
     document.getElementById("lobbyView").style.display = "none";
     document.getElementById("battleView").style.display = "block";
 
-    let pEmoji = (battle.skin && SKINS[battle.skin]) ? SKINS[battle.skin].emoji : f.emoji;
-    document.getElementById("playerSprite").textContent = pEmoji;
+    let pSprite = document.getElementById("playerSprite");
+    if(f.chibi && typeof chibiFighterSVG === "function"){
+        pSprite.innerHTML = chibiFighterSVG(f.chibi, "idle");
+        pSprite.classList.add("is-chibi");
+    } else {
+        let pEmoji = (battle.skin && SKINS[battle.skin]) ? SKINS[battle.skin].emoji : f.emoji;
+        pSprite.textContent = pEmoji;
+        pSprite.classList.remove("is-chibi");
+    }
     document.getElementById("playerName").innerHTML = `${f.name} Lv.${battle.level} <span style="color:${ELEMENTS[combat.player.elem].color}">${ELEMENTS[combat.player.elem].icon}</span>`;
     document.getElementById("enemySprite").textContent = e.emoji;
     document.getElementById("enemyName").innerHTML = `${e.name} <span style="color:${ELEMENTS[e.elem].color}">${ELEMENTS[e.elem].icon}</span>`;
@@ -628,13 +800,17 @@ function playerAttack(type){
     }
     if(mult > 1) logMsg(`&nbsp;&nbsp;🌟 ได้เปรียบธาตุ!`);
 
-    e.curHp -= dmg;
-    hitFx("enemy"); showDamage("enemy", dmg, isSkill || mult > 1);
-    if(typeof playSound === "function") playSound(isSkill ? "levelup" : "click");
-    updateBars();
-    if(e.curHp <= 0){ setTimeout(() => endBattle(true), 700); return; }
-    combat.turn = "enemy";
-    setTimeout(enemyTurn, 1100);
+    attackFx("player", isSkill);
+    setTimeout(()=>{
+        e.curHp -= dmg;
+        hitFx("enemy"); showDamage("enemy", dmg, isSkill || mult > 1);
+        slashFx("enemy", isSkill ? p.elem : null);
+        if(typeof playSound === "function") playSound(isSkill ? "levelup" : "click");
+        updateBars();
+        if(e.curHp <= 0){ setTimeout(() => endBattle(true), 700); return; }
+        combat.turn = "enemy";
+        setTimeout(enemyTurn, 1000);
+    }, 280);
 }
 
 function enemyTurn(){
@@ -642,17 +818,38 @@ function enemyTurn(){
     let p = combat.player, e = combat.enemy;
     let mult = elemMult(e.elem, p.elem);
     let dmg = Math.round(e.atk * rand(0.85,1.15) * mult);
-    p.curHp -= dmg;
-    logMsg(`💢 <b>${e.name}</b> โจมตีกลับ! ${dmg} ดาเมจ`);
-    hitFx("player"); showDamage("player", dmg, mult > 1);
-    if(typeof playSound === "function") playSound("error");
-    updateBars();
-    if(p.curHp <= 0){ setTimeout(() => endBattle(false), 700); return; }
-    combat.turn = "player";
-    enableActions(true);
+    attackFx("enemy", false);
+    setTimeout(()=>{
+        p.curHp -= dmg;
+        logMsg(`💢 <b>${e.name}</b> โจมตีกลับ! ${dmg} ดาเมจ`);
+        hitFx("player"); showDamage("player", dmg, mult > 1);
+        slashFx("player", null);
+        if(typeof playSound === "function") playSound("error");
+        updateBars();
+        if(p.curHp <= 0){ setTimeout(() => endBattle(false), 700); return; }
+        combat.turn = "player";
+        enableActions(true);
+    }, 280);
 }
 
 /* ===== FX ===== */
+function attackFx(who, isSkill){
+    let s = document.getElementById(who==="enemy"?"enemySprite":"playerSprite");
+    let cls = who === "player" ? "lunge-right" : "lunge-left";
+    s.classList.remove("lunge-right","lunge-left"); void s.offsetWidth;
+    s.classList.add(cls);
+    if(isSkill){ s.classList.add("skill-glow"); setTimeout(()=>s.classList.remove("skill-glow"), 600); }
+    setTimeout(()=> s.classList.remove(cls), 450);
+}
+function slashFx(targetWho, elem){
+    let side = document.querySelector(targetWho==="enemy"?".enemy-side":".player-side");
+    if(!side) return;
+    let slash = document.createElement("div");
+    slash.className = "slash-fx" + (elem ? " elem-"+elem : "");
+    slash.textContent = elem ? ({fire:"🔥",water:"💧",grass:"🍃"}[elem]||"✦") : "";
+    side.appendChild(slash);
+    setTimeout(()=> slash.remove(), 500);
+}
 function hitFx(who){ let s = document.getElementById(who==="enemy"?"enemySprite":"playerSprite"); s.classList.remove("shake"); void s.offsetWidth; s.classList.add("shake"); }
 function healFx(who){ let s = document.getElementById(who==="enemy"?"enemySprite":"playerSprite"); s.classList.remove("heal"); void s.offsetWidth; s.classList.add("heal"); }
 function showDamage(who, dmg, crit){
@@ -682,12 +879,20 @@ function endBattle(win){
         questProgress("win", 1);
         if(e.tier === "bigboss" || e.tier === "miniboss" || e.tier === "secret") questProgress("bossWin", 1);
 
+        // gacha ticket rewards: bosses give tickets
+        let ticketGain = 0;
+        if(e.tier === "secret") ticketGain = 3;
+        else if(e.tier === "bigboss") ticketGain = 2;
+        else if(e.tier === "miniboss") ticketGain = 1;
+
         if(combat.isTower){
             // advance floor
             questProgress("tower", 1);
             battle.towerFloor += 1;
             if(battle.towerFloor - 1 > battle.towerBest) battle.towerBest = battle.towerFloor - 1;
             html += `<div class="reward-line unlock">🗼 ผ่านชั้น ${combat.towerFloor}! ไปต่อชั้น ${battle.towerFloor}</div>`;
+            // every 5th tower floor grants a ticket
+            if(combat.towerFloor % 5 === 0) ticketGain += 1;
         } else {
             // normal enemy unlock rewards
             if(!battle.defeated.includes(combat.enemyId)){
@@ -697,9 +902,14 @@ function endBattle(win){
                 if(en && en.skin && !battle.skins.includes(en.skin)){ battle.skins.push(en.skin); html += `<div class="reward-line unlock">🎨 ปลดล็อกสกิน ${SKINS[en.skin].name}!</div>`; }
             }
         }
+        if(ticketGain > 0){
+            battle.gachaTickets = (battle.gachaTickets || 0) + ticketGain;
+            html += `<div class="reward-line unlock">🎫 ได้ตั๋วกาชา +${ticketGain}!</div>`;
+        }
         rewardsEl.innerHTML = html; save();
         if(typeof fireConfetti === "function") fireConfetti();
         if(typeof playSound === "function") playSound("levelup");
+        if(typeof chibiReact === "function") chibiReact("win");
     } else {
         document.getElementById("resultEmoji").textContent = "💔";
         document.getElementById("resultTitle").textContent = "พ่ายแพ้...";
@@ -709,6 +919,7 @@ function endBattle(win){
             : `อย่าเพิ่งยอมแพ้! อัพเลเวล ซื้ออาวุธ/ยา แล้วลองใหม่นะ 💪`;
         rewardsEl.innerHTML = `<div class="reward-line">${msg}</div>`;
         if(typeof playSound === "function") playSound("error");
+        if(typeof chibiReact === "function") chibiReact("lose");
     }
     overlay.classList.add("show");
 }

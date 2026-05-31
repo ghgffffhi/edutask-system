@@ -373,3 +373,115 @@
 }
 .tower-reset:hover { background: rgba(255,255,255,0.08); color: var(--text); }
 .tower-hint { font-size: 11px; color: var(--text2); margin-top: 12px; line-height: 1.5; text-align: center; }
+
+/* ===== Leaderboard ===== */
+.leaderboard { display: flex; flex-direction: column; gap: 6px; }
+.lb-row {
+    display: flex; align-items: center; gap: 14px;
+    background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+    border-radius: 11px; padding: 10px 16px; transition: 0.2s;
+}
+.light-mode .lb-row { background: #f6f8fe; }
+.lb-row.lb-me {
+    background: linear-gradient(90deg, rgba(167,139,250,0.18), rgba(45,212,191,0.1));
+    border-color: rgba(167,139,250,0.5);
+    box-shadow: 0 0 0 1px rgba(167,139,250,0.3);
+}
+.lb-rank { font-size: 17px; font-weight: 800; font-family: var(--font-num); width: 34px; text-align: center; color: var(--text2); }
+.lb-row.lb-me .lb-rank { color: var(--violet); }
+.lb-name { flex: 1; font-size: 14px; font-weight: 600; }
+.lb-row.lb-me .lb-name { color: var(--violet); }
+.lb-floor { font-size: 13px; font-family: var(--font-num); color: var(--amber); font-weight: 600; }
+
+/* ===== Chibi sprites in battle ===== */
+.combatant-sprite.is-chibi { font-size: 0; }
+.combatant-sprite.is-chibi .fighter-chibi { width: 130px; height: 137px; }
+.player-sprite.is-chibi { transform: scaleX(-1); }
+.player-sprite.is-chibi .fighter-chibi { transform: none; }
+
+/* fighter chibi idle bob */
+.fighter-chibi .f-body { animation: fchibiBob 3s ease-in-out infinite; transform-origin: 100px 195px; }
+@keyframes fchibiBob { 0%,100% { transform: translateY(0);} 50% { transform: translateY(-4px);} }
+.fighter-chibi .f-aura { animation: fchibiAura 2.5s ease-in-out infinite; transform-origin: center; }
+@keyframes fchibiAura { 0%,100% { opacity:0.5; transform: scale(0.95);} 50% { opacity:0.9; transform: scale(1.05);} }
+.fighter-chibi .f-eyes { animation: chibiBlink 4.5s infinite; transform-origin: center; transform-box: fill-box; }
+
+/* ===== Attack animations ===== */
+.combatant-sprite { transition: transform 0.18s cubic-bezier(.4,0,.6,1); }
+.combatant-sprite.lunge-right { animation: lungeR 0.42s ease-out; }
+.combatant-sprite.player-sprite.is-chibi.lunge-right { animation: lungeR-chibi 0.42s ease-out; }
+@keyframes lungeR { 0% { transform: translateX(0);} 45% { transform: translateX(60px) scale(1.08);} 100% { transform: translateX(0);} }
+@keyframes lungeR-chibi { 0% { transform: scaleX(-1) translateX(0);} 45% { transform: scaleX(-1) translateX(60px) scale(1.08);} 100% { transform: scaleX(-1) translateX(0);} }
+.combatant-sprite.lunge-left { animation: lungeL 0.42s ease-out; }
+@keyframes lungeL { 0% { transform: translateX(0);} 45% { transform: translateX(-60px) scale(1.08);} 100% { transform: translateX(0);} }
+.combatant-sprite.skill-glow { filter: drop-shadow(0 0 16px var(--accent-solid, #a78bfa)) brightness(1.3); }
+
+/* slash effect */
+.slash-fx {
+    position: absolute; top: 30%; left: 50%; transform: translate(-50%,-50%);
+    width: 70px; height: 70px; pointer-events: none; font-size: 34px;
+    display: flex; align-items: center; justify-content: center;
+    animation: slashPop 0.5s ease-out forwards;
+}
+.slash-fx::before {
+    content: ""; position: absolute; inset: 0;
+    background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.9) 50%, transparent 70%);
+    border-radius: 50%; transform: rotate(-30deg);
+}
+.slash-fx.elem-fire::before { background: linear-gradient(120deg, transparent 30%, rgba(251,113,133,0.9) 50%, transparent 70%); }
+.slash-fx.elem-water::before { background: linear-gradient(120deg, transparent 30%, rgba(96,165,250,0.9) 50%, transparent 70%); }
+.slash-fx.elem-grass::before { background: linear-gradient(120deg, transparent 30%, rgba(52,211,153,0.9) 50%, transparent 70%); }
+@keyframes slashPop { 0% { opacity:0; transform: translate(-50%,-50%) scale(0.3) rotate(-40deg);} 40% { opacity:1; transform: translate(-50%,-50%) scale(1.2) rotate(10deg);} 100% { opacity:0; transform: translate(-50%,-50%) scale(1.4) rotate(20deg);} }
+
+/* ===== Bag chibi avatars ===== */
+.bag-chibi { display:flex; justify-content:center; margin-bottom: 4px; }
+.bag-chibi .fighter-chibi { width: 64px; height: 67px; }
+.bag-rarity { position:absolute; top:8px; left:8px; font-size:9px; font-weight:800; padding:2px 7px; border-radius:999px; color:#fff; }
+.bag-rarity.r-R { background:#60a5fa; }
+.bag-rarity.r-SR { background:#a78bfa; }
+.bag-rarity.r-SSR { background:#fbbf24; color:#1a1f36; }
+.bag-rarity.r-UR { background:linear-gradient(135deg,#fb7185,#f59e0b); }
+.bag-card { position: relative; }
+
+/* ===== Gacha panel ===== */
+.gacha-panel { position: relative; overflow: hidden; }
+.gacha-panel::before { content:""; position:absolute; inset:0; background: radial-gradient(circle at 80% 0%, rgba(251,191,36,0.1), transparent 60%); pointer-events:none; }
+.gacha-info { display:flex; gap:10px; margin-bottom:14px; position:relative; }
+.gacha-stat {
+    flex:1; text-align:center; background: rgba(255,255,255,0.03);
+    border:1px solid var(--border); border-radius:12px; padding:10px;
+}
+.light-mode .gacha-stat { background:#f6f8fe; }
+.gacha-stat span { display:block; font-size:11px; color:var(--text2); margin-bottom:3px; }
+.gacha-stat b { font-size:18px; font-family:var(--font-num); color:var(--amber); }
+.gacha-btns { display:flex; gap:10px; position:relative; }
+.gacha-btn {
+    flex:1; padding:14px; border:none; border-radius:var(--radius-sm);
+    font-family:var(--font); font-weight:700; font-size:14px; cursor:pointer; transition:0.2s;
+}
+.gacha-btn.coin { background: linear-gradient(135deg,#f59e0b,#fbbf24); color:#1a1f36; }
+.gacha-btn.ticket { background: linear-gradient(135deg,#a78bfa,#7c3aed); color:#fff; }
+.gacha-btn:hover { transform:translateY(-2px); filter:brightness(1.08); }
+.gacha-hint { font-size:11px; color:var(--text2); margin-top:12px; line-height:1.5; text-align:center; position:relative; }
+
+/* ===== Gacha result overlay ===== */
+.gacha-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.85); backdrop-filter:blur(12px); z-index:1100; display:none; align-items:center; justify-content:center; padding:20px; }
+.gacha-overlay.show { display:flex; }
+.gacha-result-box {
+    background: var(--panel); border:2px solid var(--border); border-radius:26px;
+    padding:32px 40px; text-align:center; max-width:340px; width:90%;
+}
+.gacha-result-box.reveal { animation: gachaReveal 0.6s cubic-bezier(.175,.885,.32,1.275); }
+@keyframes gachaReveal { 0% { transform:scale(0.3) rotate(-10deg); opacity:0;} 60% { transform:scale(1.1) rotate(3deg);} 100% { transform:scale(1) rotate(0); opacity:1;} }
+.gacha-result-box.r-border-R { border-color:#60a5fa; box-shadow:0 0 50px rgba(96,165,250,0.4); }
+.gacha-result-box.r-border-SR { border-color:#a78bfa; box-shadow:0 0 50px rgba(167,139,250,0.5); }
+.gacha-result-box.r-border-SSR { border-color:#fbbf24; box-shadow:0 0 60px rgba(251,191,36,0.6); }
+.gacha-result-box.r-border-UR { border-color:#fb7185; box-shadow:0 0 70px rgba(251,113,133,0.7); }
+.gacha-rarity-badge { display:inline-block; font-size:14px; font-weight:800; color:#fff; padding:4px 18px; border-radius:999px; margin-bottom:10px; }
+.gacha-result-chibi { display:flex; justify-content:center; }
+.gacha-result-chibi .fighter-chibi { width:150px; height:158px; animation: gachaFloat 2.5s ease-in-out infinite; }
+@keyframes gachaFloat { 0%,100% { transform:translateY(0);} 50% { transform:translateY(-8px);} }
+.gacha-result-name { font-size:22px; font-weight:800; margin-top:6px; }
+.gacha-result-elem { font-size:13px; margin-top:6px; }
+.gacha-new { margin-top:12px; color:var(--amber); font-weight:700; font-size:15px; }
+.gacha-dup { margin-top:12px; color:var(--text2); font-size:14px; }

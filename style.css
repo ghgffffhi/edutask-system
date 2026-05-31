@@ -646,3 +646,65 @@ li.low { border-left: 4px solid var(--green); }
     border-radius: 10px;
 }
 .greeting-nextclass b { color: var(--indigo); font-weight: 600; }
+
+/* ===== Chibi Focus Buddy ===== */
+.chibi-host {
+    display: flex; flex-direction: column; align-items: center;
+    margin: 4px 0 10px; position: relative;
+}
+.chibi-svg {
+    width: 150px; height: 165px;
+    filter: drop-shadow(0 8px 14px rgba(0,0,0,0.25));
+}
+#chibiBody { transform-origin: 100px 200px; animation: chibiBreathe 3.5s ease-in-out infinite; }
+@keyframes chibiBreathe { 0%,100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-2px) scale(1.012); } }
+#chibiShadow { animation: chibiShadow 3.5s ease-in-out infinite; }
+@keyframes chibiShadow { 0%,100% { transform: scaleX(1); opacity:0.18; } 50% { transform: scaleX(0.92); opacity:0.12; } }
+
+/* eye blink */
+#chibiEyes .eye { animation: chibiBlink 4.5s infinite; transform-origin: center; transform-box: fill-box; }
+@keyframes chibiBlink { 0%,92%,100% { transform: scaleY(1);} 95% { transform: scaleY(0.12);} }
+
+/* idle: gentle head bob */
+.c-idle #chibiHead { animation: chibiBob 4s ease-in-out infinite; transform-origin: 100px 110px; }
+@keyframes chibiBob { 0%,100% { transform: rotate(0deg);} 25% { transform: rotate(-2.5deg);} 75% { transform: rotate(2.5deg);} }
+
+/* working: writing arm + focused little nod */
+.c-working #armRight { animation: chibiWrite 0.8s ease-in-out infinite; transform-origin: 133px 124px; }
+@keyframes chibiWrite { 0%,100% { transform: rotate(0deg) translateY(0);} 50% { transform: rotate(-14deg) translateY(2px);} }
+.c-working #chibiBody { animation: chibiBreathe 1.8s ease-in-out infinite; }
+.c-working #chibiHead { animation: chibiFocusNod 2.4s ease-in-out infinite; transform-origin: 100px 110px; }
+@keyframes chibiFocusNod { 0%,100% { transform: translateY(0);} 50% { transform: translateY(1.5px) rotate(1deg);} }
+
+/* resting: slow sway + ZzZ float */
+.c-resting #chibiBody { animation: chibiSway 4.5s ease-in-out infinite; transform-origin: 100px 200px; }
+@keyframes chibiSway { 0%,100% { transform: rotate(-3deg);} 50% { transform: rotate(3deg);} }
+#chibiZzz text { animation: chibiZzzFloat 2.4s ease-in-out infinite; }
+#chibiZzz text:nth-child(2){ animation-delay: 0.3s; }
+#chibiZzz text:nth-child(3){ animation-delay: 0.6s; }
+@keyframes chibiZzzFloat { 0% { opacity:0; transform: translateY(6px);} 50% { opacity:1;} 100% { opacity:0; transform: translateY(-8px);} }
+
+/* success: happy bounce + arms up + sparkle */
+.c-success #chibiBody { animation: chibiJump 0.6s ease-in-out infinite; transform-origin: 100px 200px; }
+@keyframes chibiJump { 0%,100% { transform: translateY(0);} 35% { transform: translateY(-12px);} 70% { transform: translateY(0);} }
+.c-success #armLeft { transform: rotate(-35deg); transform-origin: 67px 124px; transition:0.3s; }
+.c-success #armRight { transform: rotate(35deg); transform-origin: 133px 124px; transition:0.3s; }
+#chibiSparkle text { animation: chibiSparkle 1.2s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+#chibiSparkle text:nth-child(2){ animation-delay:0.4s; }
+#chibiSparkle text:nth-child(3){ animation-delay:0.8s; }
+@keyframes chibiSparkle { 0%,100% { opacity:0.3; transform: scale(0.7) rotate(0deg);} 50% { opacity:1; transform: scale(1.15) rotate(20deg);} }
+
+/* speech bubble */
+.chibi-speech {
+    margin-top: 4px; background: var(--panel); border: 1px solid var(--border);
+    color: var(--text); font-size: 12.5px; font-weight: 500;
+    padding: 7px 14px; border-radius: 14px; position: relative;
+    max-width: 200px; text-align: center; opacity: 0; transform: translateY(-4px) scale(0.95);
+    transition: 0.25s; pointer-events: none;
+}
+.chibi-speech.show { opacity: 1; transform: translateY(0) scale(1); }
+.chibi-speech::before {
+    content: ""; position: absolute; top: -6px; left: 50%; transform: translateX(-50%) rotate(45deg);
+    width: 10px; height: 10px; background: var(--panel);
+    border-left: 1px solid var(--border); border-top: 1px solid var(--border);
+}

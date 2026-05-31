@@ -84,6 +84,27 @@
             <p class="tower-hint">ทุก 5 ชั้นเจอบอส · ทุก 10 ชั้นเจอเจ้าหอคอย! ยิ่งลึกยิ่งโหด ยิ่งรางวัลเยอะ</p>
         </div>
 
+        <!-- Leaderboard -->
+        <div class="panel">
+            <p class="panel-title">🏆 อันดับไต่หอคอย <span class="quest-refresh">เทียบกับผู้เล่นคนอื่น</span></p>
+            <div class="leaderboard" id="leaderboard"></div>
+        </div>
+
+        <!-- Gacha -->
+        <div class="panel gacha-panel">
+            <p class="panel-title">🎰 อัญเชิญนักสู้ (กาชา)</p>
+            <div class="gacha-info">
+                <div class="gacha-stat"><span>🎫 ตั๋ว</span><b id="gachaTickets">0</b></div>
+                <div class="gacha-stat"><span>🎀 สะสม</span><b id="gachaCollected">0/0</b></div>
+                <div class="gacha-stat"><span>⭐ การันตี</span><b id="gachaPity">0/10</b></div>
+            </div>
+            <div class="gacha-btns">
+                <button class="gacha-btn coin" onclick="doGacha('coin')">สุ่มด้วย 🪙 <span id="gachaCoinCost">200</span></button>
+                <button class="gacha-btn ticket" onclick="doGacha('ticket')">สุ่มด้วย 🎫 ตั๋ว</button>
+            </div>
+            <p class="gacha-hint">ลุ้นนักสู้สาวจิบิ R / SR / SSR / UR · ครบ 10 ครั้งการันตี SSR ขึ้นไป · ตัวซ้ำแปลงเป็นเหรียญ</p>
+        </div>
+
         <!-- Bag -->
         <div class="panel">
             <p class="panel-title">🎒 กระเป๋าสัตว์เลี้ยง</p>
@@ -163,9 +184,19 @@
         </div>
     </div>
 
+    <!-- Gacha Result Overlay -->
+    <div class="gacha-overlay" id="gachaOverlay">
+        <div class="gacha-result-box" id="gachaResultBox">
+            <div id="gachaResultInner"></div>
+            <button onclick="closeGacha()" class="btn-primary" style="width:auto;padding:11px 36px;margin-top:8px">เยี่ยม!</button>
+        </div>
+    </div>
+
     <div id="toast"></div>
     <script src="confetti.js"></script>
     <script src="sound.js"></script>
-    <script src="battle.js"></script>
+    <script src="fighters.js"></script>
+    <script src="battle.js"></script>    <script src="chibi.js"></script>
+
 </body>
 </html>
