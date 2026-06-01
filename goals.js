@@ -91,7 +91,8 @@ function checkNewDay(){
                 }
             }
         }
-        state.goals = [];
+        // habit tracker: keep the goals, just un-check them for the new day
+        state.goals.forEach(g => { g.done = false; });
         state.lastDate = today;
         state.todayXP = 0;
         state.todayCoins = 0;

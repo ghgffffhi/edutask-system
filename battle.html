@@ -159,6 +159,8 @@
                     <div class="hp-bar player-hp" id="playerHpBar"></div>
                 </div>
                 <div class="hp-text" id="playerHpText">100/100</div>
+                <div class="sp-bar-wrap"><div class="sp-bar" id="spBar"></div></div>
+                <div class="sp-text" id="spText">0/10 SP</div>
             </div>
         </div>
 
@@ -170,6 +172,8 @@
         <div class="action-menu" id="actionMenu">
             <button class="action-btn atk" onclick="playerAttack('normal')">⚔️ โจมตี</button>
             <button class="action-btn skill" onclick="playerAttack('skill')" id="skillBtn">✨ สกิลพิเศษ</button>
+            <button class="action-btn ult" onclick="playerUlt()" id="ultBtn">💥 อัลติ</button>
+            <button class="action-btn heal" onclick="playerHeal()" id="healBtn" style="display:none">💚 ฟื้นพลัง</button>
             <button class="action-btn flee" onclick="fleeBattle()">🏃 หนี</button>
         </div>
     </div>
@@ -195,6 +199,8 @@
     <div id="toast"></div>
     <script src="confetti.js"></script>
     <script src="sound.js"></script>
+    <script src="lofi.js"></script>
+    <script src="weather.js"></script>
     <script src="fighters.js"></script>
     <script src="battle.js"></script>    <script src="chibi.js"></script>
 

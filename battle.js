@@ -17,46 +17,80 @@ function elemMult(atkElem, defElem){
     if(ELEMENTS[defElem] && ELEMENTS[defElem].strong === atkElem) return 0.66; // not very effective
     return 1;
 }
+// which element is super-effective against `defElem`
+function counterElement(defElem){
+    for(let k in ELEMENTS){ if(ELEMENTS[k].strong === defElem) return k; }
+    return null;
+}
 
 /* =========================================================
    FIGHTERS
    ========================================================= */
 const FIGHTERS = {
-    egg:    { emoji:'🥚', name:'ไข่ปริศนา',     hp:80,  atk:12, skill:'สั่นสะเทือน',  skillMult:1.4, hpG:8,  atkG:2, elem:'grass', chibi:{ hair:'#fcd34d', hair2:'#fde68a', outfit:'#a3e635', outfit2:'#65a30d', style:'short', weapon:null } },
-    chick:  { emoji:'🐣', name:'ลูกไก่น้อย',   hp:100, atk:16, skill:'จิกรัว',       skillMult:1.5, hpG:12, atkG:3, elem:'grass', chibi:{ hair:'#fbbf24', hair2:'#fef08a', outfit:'#facc15', outfit2:'#ca8a04', style:'short', weapon:null } },
-    cat:    { emoji:'🐱', name:'แมวน้อยจอมซน', hp:130, atk:22, skill:'ฟื้นพลัง',     skillMult:1.3, hpG:16, atkG:4, heal:true, elem:'water', chibi:{ hair:'#93c5fd', hair2:'#dbeafe', outfit:'#38bdf8', outfit2:'#0ea5e9', style:'twin', weapon:'staff' } },
-    fox:    { emoji:'🦊', name:'จิ้งจอกจอมเก่ง', hp:150, atk:28, skill:'ตีสองครั้ง',  skillMult:1.8, hpG:18, atkG:5, elem:'fire', chibi:{ hair:'#fb923c', hair2:'#fed7aa', outfit:'#f97316', outfit2:'#c2410c', style:'twin', weapon:'sword' } },
-    dragon: { emoji:'🐉', name:'มังกรในตำนาน', hp:200, atk:38, skill:'พ่นไฟ',        skillMult:2.0, hpG:24, atkG:7, elem:'fire', chibi:{ hair:'#f87171', hair2:'#fca5a5', outfit:'#dc2626', outfit2:'#7f1d1d', style:'long', weapon:'spear' } },
-    golem:  { emoji:'🗿', name:'โกเลมหิน',      hp:260, atk:30, skill:'กำแพงหิน',     skillMult:1.6, hpG:26, atkG:6, elem:'grass', chibi:{ hair:'#a8a29e', hair2:'#d6d3d1', outfit:'#78716c', outfit2:'#44403c', style:'short', weapon:null } },
-    demon:  { emoji:'👹', name:'อสูรแดง',       hp:240, atk:48, skill:'เปลวนรก',      skillMult:2.2, hpG:24, atkG:9, elem:'fire', chibi:{ hair:'#dc2626', hair2:'#f87171', outfit:'#991b1b', outfit2:'#450a0a', style:'long', weapon:'scythe' } },
-    reaper: { emoji:'💀', name:'มัจจุราช',      hp:320, atk:60, skill:'เคียวสังหาร',  skillMult:2.5, hpG:34, atkG:12, elem:'water', chibi:{ hair:'#6366f1', hair2:'#a5b4fc', outfit:'#1e1b4b', outfit2:'#020617', style:'long', weapon:'scythe' } },
-    // ===== Gacha-only chibi fighters =====
-    sakura: { emoji:'🌸', name:'ซากุระจัง',     hp:140, atk:26, skill:'กลีบดาบ',     skillMult:1.7, hpG:17, atkG:5, elem:'grass', rarity:'R',  gacha:true, chibi:{ hair:'#f472b6', hair2:'#fbcfe8', outfit:'#ec4899', outfit2:'#be185d', style:'twin', weapon:'sword' } },
-    yuki:   { emoji:'❄️', name:'ยูกิหิมะ',      hp:160, atk:24, skill:'พายุน้ำแข็ง', skillMult:1.8, hpG:18, atkG:5, heal:true, elem:'water', rarity:'SR', gacha:true, chibi:{ hair:'#a5f3fc', hair2:'#ecfeff', outfit:'#06b6d4', outfit2:'#0e7490', style:'long', weapon:'staff' } },
-    hana:   { emoji:'🌺', name:'ฮานะดอกไม้',    hp:155, atk:27, skill:'พรพฤกษา',     skillMult:1.7, hpG:18, atkG:5, heal:true, elem:'grass', rarity:'SR', gacha:true, chibi:{ hair:'#4ade80', hair2:'#bbf7d0', outfit:'#16a34a', outfit2:'#14532d', style:'bun', weapon:'staff' } },
-    akari:  { emoji:'🔆', name:'อาคาริเปลวไฟ',  hp:165, atk:34, skill:'ระบำเพลิง',   skillMult:2.0, hpG:19, atkG:6, elem:'fire', rarity:'SSR', gacha:true, chibi:{ hair:'#fb7185', hair2:'#fecdd3', outfit:'#e11d48', outfit2:'#881337', style:'twin', weapon:'spear' } },
-    luna:   { emoji:'🌙', name:'ลูน่าจันทรา',   hp:180, atk:36, skill:'แสงจันทร์',   skillMult:2.1, hpG:20, atkG:7, heal:true, elem:'water', rarity:'SSR', gacha:true, chibi:{ hair:'#c4b5fd', hair2:'#ede9fe', outfit:'#7c3aed', outfit2:'#4c1d95', style:'long', weapon:'staff' } },
-    hoshi:  { emoji:'⭐', name:'โฮชิดารา',       hp:200, atk:42, skill:'ฝนดาวตก',     skillMult:2.3, hpG:22, atkG:8, elem:'grass', rarity:'UR', gacha:true, chibi:{ hair:'#fde047', hair2:'#fef9c3', outfit:'#eab308', outfit2:'#854d0e', style:'twin', weapon:'bow' } }
+    // ===== Pet / Boss line — rendered as creatures (emoji), NOT anime girls =====
+    egg:    { emoji:'🥚', name:'ไข่ปริศนา',     hp:80,  atk:12, skill:'สั่นสะเทือน', skillMult:1.6, skillCost:3, ult:'ไข่ระเบิด',   ultMult:3.0, ultCost:10, hpG:8,  atkG:2, elem:'grass', creature:true },
+    chick:  { emoji:'🐣', name:'ลูกไก่น้อย',   hp:100, atk:16, skill:'จิกรัว',      skillMult:1.7, skillCost:3, ult:'พายุขนนก',  ultMult:3.2, ultCost:10, hpG:12, atkG:3, elem:'grass', creature:true },
+    cat:    { emoji:'🐱', name:'แมวน้อยจอมซน', hp:130, atk:22, skill:'ฟื้นพลัง',    skillMult:1.4, skillCost:4, ult:'เก้าชีวิต',  ultMult:2.6, ultCost:10, hpG:16, atkG:4, heal:true, elem:'water', creature:true },
+    fox:    { emoji:'🦊', name:'จิ้งจอกจอมเก่ง', hp:150, atk:28, skill:'ตีสองครั้ง', skillMult:2.0, skillCost:5, ult:'เงาเก้าหาง', ultMult:3.5, ultCost:10, hpG:18, atkG:5, elem:'fire', creature:true },
+    dragon: { emoji:'🐉', name:'มังกรในตำนาน', hp:200, atk:38, skill:'พ่นไฟ',       skillMult:2.3, skillCost:5, ult:'ลมหายใจมังกร', ultMult:4.0, ultCost:10, hpG:24, atkG:7, elem:'fire', creature:true },
+    golem:  { emoji:'🗿', name:'โกเลมหิน',      hp:260, atk:30, skill:'กำแพงหิน',    skillMult:1.8, skillCost:4, ult:'แผ่นดินไหว', ultMult:3.4, ultCost:10, hpG:26, atkG:6, elem:'grass', creature:true },
+    demon:  { emoji:'😈', name:'อสูรแดง',       hp:240, atk:48, skill:'เปลวนรก',     skillMult:2.4, skillCost:6, ult:'ไฟบรรลัยกัลป์', ultMult:4.2, ultCost:10, hpG:24, atkG:9, elem:'fire', creature:true },
+    reaper: { emoji:'💀', name:'มัจจุราช',      hp:320, atk:60, skill:'เคียวสังหาร', skillMult:2.7, skillCost:6, ult:'พิพากษามรณะ', ultMult:4.5, ultCost:10, hpG:34, atkG:12, elem:'water', creature:true },
+    // ===== Gacha — anime girls (เท่ สวย เซ็กซี่) =====
+    sakura: { emoji:'🌸', name:'ซากุระจัง',     hp:140, atk:26, skill:'กลีบดาบ',     skillMult:1.9, skillCost:4, ult:'พายุซากุระ',  ultMult:3.6, ultCost:10, hpG:17, atkG:5, elem:'grass', rarity:'R',  gacha:true, anime:{ hair:'#f472b6', hair2:'#fbcfe8', eye:'#db2777', eye2:'#fbcfe8', outfit:'#ec4899', outfit2:'#be185d', trim:'#fce7f3', hairStyle:'twin' } },
+    rin:    { emoji:'⚡', name:'รินสายฟ้า',      hp:135, atk:30, skill:'ฟ้าผ่า',      skillMult:2.0, skillCost:4, ult:'สายฟ้าพิโรธ', ultMult:3.7, ultCost:10, hpG:16, atkG:6, elem:'fire', rarity:'R', gacha:true, anime:{ hair:'#facc15', hair2:'#fef08a', eye:'#a16207', eye2:'#fde68a', outfit:'#eab308', outfit2:'#854d0e', trim:'#fff7cd', hairStyle:'ponytail' } },
+    yuki:   { emoji:'❄️', name:'ยูกิหิมะ',      hp:160, atk:24, skill:'พายุน้ำแข็ง', skillMult:2.0, skillCost:5, ult:'นิรันดร์เหมันต์', ultMult:3.8, ultCost:10, hpG:18, atkG:5, heal:true, elem:'water', rarity:'SR', gacha:true, anime:{ hair:'#a5f3fc', hair2:'#ecfeff', eye:'#0891b2', eye2:'#cffafe', outfit:'#06b6d4', outfit2:'#0e7490', trim:'#cffafe', hairStyle:'long' } },
+    hana:   { emoji:'🌺', name:'ฮานะดอกไม้',    hp:155, atk:27, skill:'พรพฤกษา',     skillMult:1.9, skillCost:5, ult:'สวนสวรรค์',  ultMult:3.7, ultCost:10, hpG:18, atkG:5, heal:true, elem:'grass', rarity:'SR', gacha:true, anime:{ hair:'#4ade80', hair2:'#bbf7d0', eye:'#16a34a', eye2:'#bbf7d0', outfit:'#16a34a', outfit2:'#14532d', trim:'#dcfce7', hairStyle:'wavy' } },
+    mei:    { emoji:'🗡️', name:'เมย์ดาบคู่',    hp:150, atk:32, skill:'ระบำดาบ',     skillMult:2.1, skillCost:5, ult:'พันดาบสังหาร', ultMult:3.9, ultCost:10, hpG:17, atkG:6, elem:'fire', rarity:'SR', gacha:true, anime:{ hair:'#a855f7', hair2:'#d8b4fe', eye:'#7e22ce', eye2:'#e9d5ff', outfit:'#9333ea', outfit2:'#581c87', trim:'#f3e8ff', hairStyle:'bob' } },
+    akari:  { emoji:'🔆', name:'อาคาริเปลวไฟ',  hp:170, atk:36, skill:'ระบำเพลิง',   skillMult:2.3, skillCost:6, ult:'อเวจีเพลิง', ultMult:4.1, ultCost:10, hpG:19, atkG:6, elem:'fire', rarity:'SSR', gacha:true, anime:{ hair:'#fb7185', hair2:'#fecdd3', eye:'#e11d48', eye2:'#fecdd3', outfit:'#e11d48', outfit2:'#881337', trim:'#ffe4e6', hairStyle:'twin' } },
+    luna:   { emoji:'🌙', name:'ลูน่าจันทรา',   hp:185, atk:38, skill:'แสงจันทร์',   skillMult:2.4, skillCost:6, ult:'จันทรุปราคา', ultMult:4.2, ultCost:10, hpG:20, atkG:7, heal:true, elem:'water', rarity:'SSR', gacha:true, anime:{ hair:'#c4b5fd', hair2:'#ede9fe', eye:'#7c3aed', eye2:'#ddd6fe', outfit:'#7c3aed', outfit2:'#4c1d95', trim:'#ede9fe', hairStyle:'hime' } },
+    hoshi:  { emoji:'⭐', name:'โฮชิดารา',       hp:205, atk:44, skill:'ฝนดาวตก',     skillMult:2.6, skillCost:7, ult:'จักรวาลดับสูญ', ultMult:4.5, ultCost:10, hpG:22, atkG:8, elem:'grass', rarity:'UR', gacha:true, anime:{ hair:'#fde047', hair2:'#fef9c3', eye:'#eab308', eye2:'#fef9c3', outfit:'#eab308', outfit2:'#854d0e', trim:'#fffbeb', hairStyle:'ponytail' } },
+    kurai:  { emoji:'🖤', name:'คุไรราตรี',      hp:220, atk:48, skill:'ดาบอสุรา',    skillMult:2.8, skillCost:7, ult:'ราตรีนิรันดร์', ultMult:4.7, ultCost:10, hpG:24, atkG:9, elem:'water', rarity:'UR', gacha:true, anime:{ hair:'#1e293b', hair2:'#475569', eye:'#dc2626', eye2:'#fca5a5', outfit:'#0f172a', outfit2:'#020617', trim:'#dc2626', hairStyle:'long' } },
+    // ===== LR — ตัวโกง! เท่ เซ็กซี่ แรงสุด โอกาส 0.5% =====
+    nyx:    { emoji:'🌌', name:'นิกซ์ เทพีรัตติกาล', hp:300, atk:66, skill:'ดาวเคราะห์ดับ', skillMult:3.2, skillCost:6, ult:'อวสานจักรวาล', ultMult:6.0, ultCost:10, hpG:30, atkG:13, elem:'water', rarity:'LR', gacha:true, anime:{ hair:'#312e81', hair2:'#818cf8', eye:'#f0abfc', eye2:'#fae8ff', outfit:'#1e1b4b', outfit2:'#0c0a2e', trim:'#c4b5fd', hairStyle:'wavy', sexy:true } },
+    solara: { emoji:'☀️', name:'โซลาร่า ราชินีสุริยะ', hp:290, atk:70, skill:'เปลวสุริยัน', skillMult:3.3, skillCost:6, ult:'ซูเปอร์โนวา', ultMult:6.2, ultCost:10, hpG:30, atkG:14, elem:'fire', rarity:'LR', gacha:true, anime:{ hair:'#f59e0b', hair2:'#fcd34d', eye:'#dc2626', eye2:'#fed7aa', outfit:'#b45309', outfit2:'#7c2d12', trim:'#fef3c7', hairStyle:'long', sexy:true } }
 };
+const MAX_SP = 10;       // skill points cap = ult cost
+const SP_PER_ATTACK = 2; // gained per normal attack
+const HEAL_PERCENT = 0.30;
+const BLOCK_CHANCE = 0.18; // monster block chance (reduces incoming dmg)
 
-/* rarity weights for gacha (higher = more common) */
+/* rarity weights for gacha (higher = more common). LR = ตัวโกง 0.5% */
 const RARITY = {
-    R:   { weight: 60, color:'#60a5fa', label:'R' },
-    SR:  { weight: 28, color:'#a78bfa', label:'SR' },
-    SSR: { weight: 10, color:'#fbbf24', label:'SSR' },
-    UR:  { weight: 2,  color:'#fb7185', label:'UR' }
+    R:   { weight: 59.5, color:'#60a5fa', label:'R' },
+    SR:  { weight: 28,   color:'#a78bfa', label:'SR' },
+    SSR: { weight: 10,   color:'#fbbf24', label:'SSR' },
+    UR:  { weight: 2,    color:'#fb7185', label:'UR' },
+    LR:  { weight: 0.5,  color:'#f0abfc', label:'LR' }
 };
 
 /* =========================================================
    ENEMIES — now with elements
    ========================================================= */
 const ENEMIES = {
-    slime:   { emoji:'🟢', name:'สไลม์',       hp:60,  atk:8,  lvl:1,  tier:'normal',   xp:30,  coins:10,  elem:'grass' },
-    bat:     { emoji:'🦇', name:'ค้างคาว',     hp:80,  atk:12, lvl:2,  tier:'normal',   xp:45,  coins:15,  elem:'fire' },
-    ghost:   { emoji:'👻', name:'ผีน้อย',      hp:110, atk:16, lvl:3,  tier:'normal',   xp:60,  coins:20,  elem:'water' },
-    golem:   { emoji:'🗿', name:'โกเลมหิน',    hp:200, atk:24, lvl:5,  tier:'miniboss', xp:120, coins:50,  reward:'golem',  elem:'grass' },
-    demon:   { emoji:'👹', name:'อสูรแดง',     hp:300, atk:36, lvl:8,  tier:'bigboss',  xp:250, coins:120, reward:'demon',  needTasks:5, elem:'fire' },
-    reaper:  { emoji:'💀', name:'มัจจุราช',    hp:600, atk:70, lvl:20, tier:'secret',   xp:800, coins:500, reward:'reaper', needLvl:11, skin:'reaper_skin', elem:'water' }
+    // ===== normal monsters (สู้ได้ทุกเมื่อ) =====
+    slime:   { emoji:'🟢', name:'สไลม์',         hp:60,  atk:8,  lvl:1,  tier:'normal', xp:30,  coins:10,  elem:'grass' },
+    bat:     { emoji:'🦇', name:'ค้างคาว',       hp:80,  atk:12, lvl:2,  tier:'normal', xp:45,  coins:15,  elem:'fire' },
+    ghost:   { emoji:'👻', name:'ผีน้อย',        hp:110, atk:16, lvl:3,  tier:'normal', xp:60,  coins:20,  elem:'water' },
+    spider:  { emoji:'🕷️', name:'แมงมุมพิษ',     hp:130, atk:19, lvl:4,  tier:'normal', xp:75,  coins:24,  elem:'grass' },
+    snake:   { emoji:'🐍', name:'งูเขี้ยวพิษ',   hp:150, atk:22, lvl:5,  tier:'normal', xp:90,  coins:28,  elem:'grass' },
+    scorpion:{ emoji:'🦂', name:'แมงป่องไฟ',     hp:160, atk:26, lvl:6,  tier:'normal', xp:105, coins:32,  elem:'fire' },
+    wolf:    { emoji:'🐺', name:'หมาป่าราตรี',   hp:180, atk:28, lvl:7,  tier:'normal', xp:120, coins:36,  elem:'water' },
+    goblin:  { emoji:'👺', name:'ก็อบลิน',       hp:200, atk:30, lvl:8,  tier:'normal', xp:135, coins:40,  elem:'fire' },
+    zombie:  { emoji:'🧟', name:'ซอมบี้',        hp:230, atk:32, lvl:9,  tier:'normal', xp:150, coins:44,  elem:'grass' },
+    imp:     { emoji:'👿', name:'ปีศาจน้อย',     hp:250, atk:36, lvl:10, tier:'normal', xp:170, coins:50,  elem:'fire' },
+    // ===== mini bosses (สู้ได้ทุกเมื่อ, ล้มแล้วได้ตัว) — tough: ต้องใช้ธาตุได้เปรียบ =====
+    golem:   { emoji:'🗿', name:'โกเลมหิน',      hp:520, atk:44, lvl:6,  tier:'miniboss', xp:160, coins:60,  reward:'golem', elem:'grass', tough:true },
+    ogre:    { emoji:'👹', name:'ออร์คยักษ์',    hp:720, atk:58, lvl:11, tier:'miniboss', xp:240, coins:90,  elem:'fire', tough:true },
+    kraken:  { emoji:'🐙', name:'คราเคน',        hp:900, atk:66, lvl:13, tier:'miniboss', xp:300, coins:110, elem:'water', tough:true },
+    // ===== big bosses (ต้องทำงานก่อน) — โหด ต้องมีอาวุธ + ธาตุถูก =====
+    demon:   { emoji:'😈', name:'อสูรแดง',       hp:850,  atk:62, lvl:8,  tier:'bigboss', xp:300, coins:140, reward:'demon', needTasks:5,  elem:'fire', tough:true },
+    hydra:   { emoji:'🐲', name:'ไฮดรา 3 หัว',   hp:1200, atk:78, lvl:14, tier:'bigboss', xp:420, coins:200, needTasks:10, elem:'water', tough:true },
+    titan:   { emoji:'🗿', name:'ไททันโบราณ',    hp:1600, atk:92, lvl:16, tier:'bigboss', xp:520, coins:260, needTasks:15, elem:'grass', tough:true },
+    phoenix: { emoji:'🔥', name:'ฟีนิกซ์เพลิง',  hp:2000, atk:104,lvl:18, tier:'bigboss', xp:620, coins:320, needTasks:20, elem:'fire', tough:true },
+    // ===== secret bosses (ตัวลับ โหดสุด) =====
+    reaper:  { emoji:'💀', name:'มัจจุราช',      hp:2400, atk:120, lvl:20, tier:'secret', xp:800,  coins:500,  reward:'reaper', needLvl:13, skin:'reaper_skin', elem:'water', tough:true },
+    voidlord:{ emoji:'🌑', name:'ราชาความว่างเปล่า', hp:4000, atk:150, lvl:30, tier:'secret', xp:1500, coins:1000, needLvl:22, elem:'grass', ticket:5, tough:true }
 };
 
 /* =========================================================
@@ -285,6 +319,21 @@ function activeElem(){
     return FIGHTERS[battle.active].elem;
 }
 
+// signature weapon shown in battle (per-fighter, else by element).
+// if an actual weapon item is equipped, that wins.
+function fighterWeapon(id, f){
+    if(battle.equip && battle.equip.weapon && ITEMS[battle.equip.weapon]){
+        return ITEMS[battle.equip.weapon].emoji;
+    }
+    const SIG = {
+        egg:'💥', chick:'🪶', cat:'🔮', fox:'🗡️', dragon:'🔱', golem:'🪨', demon:'🔥', reaper:'🌙',
+        sakura:'🌸', rin:'⚡', yuki:'❄️', hana:'🌿', mei:'⚔️', akari:'🔥', luna:'🌙', hoshi:'🏹',
+        kurai:'🗡️', nyx:'🌌', solara:'☀️'
+    };
+    if(SIG[id]) return SIG[id];
+    return { fire:'🔥', water:'🔱', grass:'🍃' }[(f&&f.elem)||'grass'] || '⚔️';
+}
+
 /* =========================================================
    COINS (shared with goals economy)
    ========================================================= */
@@ -416,8 +465,8 @@ function renderBag(){
         let div = document.createElement("div");
         div.className = "bag-card" + (active ? " active" : "");
         div.onclick = () => selectFighter(id);
-        let avatar = (f.chibi && typeof chibiFighterSVG === "function")
-            ? `<div class="bag-chibi">${chibiFighterSVG(f.chibi, "idle")}</div>`
+        let avatar = (f.anime && typeof animeFighterSVG === "function")
+            ? `<div class="bag-chibi">${animeFighterSVG(f.anime, "idle")}</div>`
             : `<div class="bag-emoji">${f.emoji}</div>`;
         let rarityTag = f.rarity ? `<div class="bag-rarity r-${f.rarity}">${f.rarity}</div>` : '';
         div.innerHTML = `
@@ -433,6 +482,9 @@ function renderBag(){
     });
 }
 
+// normal monsters must be beaten in order (ตีตัวก่อนหน้าผ่านก่อน)
+const NORMAL_ORDER = ['slime','bat','ghost','spider','snake','scorpion','wolf','goblin','zombie','imp'];
+
 function renderEnemies(){
     let grid = document.getElementById("enemyGrid");
     grid.innerHTML = "";
@@ -441,6 +493,16 @@ function renderEnemies(){
     Object.keys(ENEMIES).forEach(id => {
         let e = ENEMIES[id];
         let locked = false, lockReason = "";
+
+        // sequential normal-monster unlock: need previous one defeated
+        let nIdx = NORMAL_ORDER.indexOf(id);
+        if(nIdx > 0){
+            let prev = NORMAL_ORDER[nIdx - 1];
+            if(!battle.defeated.includes(prev)){
+                locked = true; lockReason = `ต้องชนะ ${ENEMIES[prev].name} ก่อน`;
+            }
+        }
+        // bosses/secret keep their own conditions
         if(e.needTasks && tasksDone < e.needTasks){ locked = true; lockReason = `ทำงานให้ครบ ${e.needTasks} ชิ้น (${tasksDone}/${e.needTasks})`; }
         if(e.needLvl && battle.level < e.needLvl){ locked = true; lockReason = `ต้องถึง Lv.${e.needLvl} (ตอนนี้ Lv.${battle.level})`; }
 
@@ -457,6 +519,7 @@ function renderEnemies(){
             <div class="enemy-elem" style="color:${ELEMENTS[e.elem].color}">${ELEMENTS[e.elem].icon}</div>
             <div class="enemy-stats">Lv.${e.lvl} · ❤️${e.hp} · ⚔️${e.atk}</div>
             <div class="enemy-reward">🏆 ${e.xp}xp · 🪙${e.coins}${e.reward ? ' · 🔓' : ''}</div>
+            ${e.tough && !locked ? `<div class="enemy-tough">🛡️ ทนทาน! ใช้ธาตุ ${(()=>{let c=counterElement(e.elem);return c?ELEMENTS[c].icon+ELEMENTS[c].name:'';})()} ถึงจะเต็มแรง</div>` : ''}
             ${locked ? `<div class="enemy-lock">${lockReason}</div>` : ''}
         `;
         grid.appendChild(div);
@@ -577,7 +640,7 @@ function showGachaResult(winId, rarity, dup, coinBack, payType){
     let overlay = document.getElementById("gachaOverlay");
     let box = document.getElementById("gachaResultBox");
     box.className = "gacha-result-box reveal r-border-" + rarity;
-    let avatar = (f.chibi && typeof chibiFighterSVG === "function") ? chibiFighterSVG(f.chibi,"idle") : `<div style="font-size:80px">${f.emoji}</div>`;
+    let avatar = (f.anime && typeof animeFighterSVG === "function") ? animeFighterSVG(f.anime,"idle") : `<div style="font-size:80px">${f.emoji}</div>`;
     document.getElementById("gachaResultInner").innerHTML = `
         <div class="gacha-rarity-badge" style="background:${rc.color}">${rc.label}</div>
         <div class="gacha-result-chibi">${avatar}</div>
@@ -685,7 +748,7 @@ function startBattleWith(e, isTower){
         isTower: isTower,
         towerFloor: isTower ? battle.towerFloor : null,
         enemy: { ...e, curHp: e.hp, maxHp: e.hp },
-        player: { curHp: st.hp, maxHp: st.hp, atk: st.atk, elem: activeElem(), ...f },
+        player: { curHp: st.hp, maxHp: st.hp, atk: st.atk, elem: activeElem(), sp: 0, ...f },
         turn: "player", over: false
     };
 
@@ -693,28 +756,59 @@ function startBattleWith(e, isTower){
     document.getElementById("battleView").style.display = "block";
 
     let pSprite = document.getElementById("playerSprite");
-    if(f.chibi && typeof chibiFighterSVG === "function"){
-        pSprite.innerHTML = chibiFighterSVG(f.chibi, "idle");
-        pSprite.classList.add("is-chibi");
-    } else {
-        let pEmoji = (battle.skin && SKINS[battle.skin]) ? SKINS[battle.skin].emoji : f.emoji;
-        pSprite.textContent = pEmoji;
-        pSprite.classList.remove("is-chibi");
-    }
+    // In battle we show the fighter's SIGNATURE WEAPON (big & clean) instead of
+    // the portrait — looks cooler and avoids any SVG scaling distortion.
+    let weaponIcon = fighterWeapon(battle.active, f);
+    pSprite.innerHTML = `<span class="weapon-sprite elem-${combat.player.elem}">${weaponIcon}</span>`;
+    pSprite.classList.remove("is-chibi");
+    pSprite.classList.add("is-weapon");
     document.getElementById("playerName").innerHTML = `${f.name} Lv.${battle.level} <span style="color:${ELEMENTS[combat.player.elem].color}">${ELEMENTS[combat.player.elem].icon}</span>`;
     document.getElementById("enemySprite").textContent = e.emoji;
     document.getElementById("enemyName").innerHTML = `${e.name} <span style="color:${ELEMENTS[e.elem].color}">${ELEMENTS[e.elem].icon}</span>`;
-    document.getElementById("skillBtn").textContent = "✨ " + f.skill;
+    document.getElementById("skillBtn").innerHTML = `✨ ${f.skill} <span class="sp-cost">${f.skillCost} SP</span>`;
+    let ultBtn = document.getElementById("ultBtn");
+    if(ultBtn) ultBtn.innerHTML = `💥 ${f.ult} <span class="sp-cost">${f.ultCost} SP</span>`;
 
     renderPotionButtons();
+    renderHealBtn();
     document.getElementById("battleLog").innerHTML = "";
     logMsg(`การต่อสู้กับ <b>${e.name}</b> เริ่มขึ้น!`);
     let mult = elemMult(combat.player.elem, e.elem);
     if(mult > 1) logMsg(`🌟 ธาตุของเธอได้เปรียบ! (x1.5)`);
     else if(mult < 1) logMsg(`⚠️ ธาตุของเธอเสียเปรียบ (x0.66)`);
+    if(e.tough){
+        let c = counterElement(e.elem);
+        if(mult <= 1) logMsg(`🛡️ <b>${e.name}</b> เป็นบอสทนทาน! ดาเมจจะโดนลดครึ่ง ถ้าไม่ใช้ธาตุ${c?ELEMENTS[c].name:''} — แนะนำเปลี่ยนตัว/อาวุธก่อนนะ`);
+        else logMsg(`🛡️ บอสทนทาน แต่ธาตุเธอได้เปรียบ — ลุยเลย!`);
+    }
     updateBars();
+    updateSP();
     enableActions(true);
     if(typeof playSound === "function") playSound("click");
+}
+
+function renderHealBtn(){
+    let healBtn = document.getElementById("healBtn");
+    if(!healBtn) return;
+    // heal action only shown for healer fighters
+    healBtn.style.display = combat.player.heal ? "" : "none";
+}
+
+function updateSP(){
+    let p = combat.player;
+    let bar = document.getElementById("spBar");
+    let txt = document.getElementById("spText");
+    if(bar) bar.style.width = Math.min(100, (p.sp / MAX_SP) * 100) + "%";
+    if(txt) txt.textContent = `${p.sp}/${MAX_SP} SP`;
+    // enable/disable skill + ult by SP
+    let skillBtn = document.getElementById("skillBtn");
+    if(skillBtn) skillBtn.classList.toggle("sp-low", p.sp < p.skillCost);
+    let ultBtn = document.getElementById("ultBtn");
+    if(ultBtn){
+        let ready = p.sp >= p.ultCost;
+        ultBtn.classList.toggle("sp-low", !ready);
+        ultBtn.classList.toggle("ult-ready", ready);
+    }
 }
 
 function renderPotionButtons(){
@@ -771,23 +865,38 @@ function rand(min, max){ return Math.random() * (max - min) + min; }
 
 function playerAttack(type){
     if(combat.over || combat.turn !== "player") return;
-    enableActions(false);
     let p = combat.player, e = combat.enemy;
     let isSkill = type === "skill";
-    if(isSkill) questProgress("skill", 1);
+    let isUlt = type === "ult";
+
+    // SP gating
+    if(isUlt){
+        if(p.sp < p.ultCost){ showToast(`💥 SP ไม่พอ! อัลติต้องการ ${p.ultCost} SP`); if(typeof playSound==="function") playSound("error"); return; }
+        p.sp -= p.ultCost;
+        questProgress("skill", 1);
+    } else if(isSkill){
+        if(p.sp < p.skillCost){ showToast(`✨ SP ไม่พอ! ต้องการ ${p.skillCost} SP`); if(typeof playSound==="function") playSound("error"); return; }
+        p.sp -= p.skillCost;
+        questProgress("skill", 1);
+    } else {
+        p.sp = Math.min(MAX_SP, p.sp + SP_PER_ATTACK);
+    }
+    updateSP();
+    enableActions(false);
+
     let mult = elemMult(p.elem, e.elem);
+    // TOUGH bosses: take half damage unless you have element advantage.
+    // forces the player to bring the right element + gear, not one fighter for all.
+    if(e.tough && mult <= 1) mult *= 0.5;
     let dmg;
 
-    if(isSkill){
-        if(p.heal){
-            let healAmt = Math.round(p.maxHp * 0.25);
-            p.curHp = Math.min(p.maxHp, p.curHp + healAmt);
-            dmg = Math.round(p.atk * rand(0.8,1.0) * mult);
-            logMsg(`✨ <b>${p.name}</b> ใช้ ${p.skill} ฟื้น ${healAmt} HP และโจมตี ${dmg}!`);
-            healFx("player");
-        } else if(p.skill === "ตีสองครั้ง"){
-            let d1 = Math.round(p.atk * rand(0.7,0.9) * mult);
-            let d2 = Math.round(p.atk * rand(0.7,0.9) * mult);
+    if(isUlt){
+        dmg = Math.round(p.atk * p.ultMult * rand(0.95,1.1) * mult);
+        logMsg(`💥💥 <b>${p.name}</b> ปลดปล่อยอัลติ <b>${p.ult}</b>! ${dmg} ดาเมจมหาศาล!`);
+    } else if(isSkill){
+        if(p.skill === "ตีสองครั้ง" || p.skill === "ระบำดาบ"){
+            let d1 = Math.round(p.atk * rand(0.8,1.0) * mult);
+            let d2 = Math.round(p.atk * rand(0.8,1.0) * mult);
             dmg = d1 + d2;
             logMsg(`✨ <b>${p.name}</b> ใช้ ${p.skill}! ${d1} + ${d2} = ${dmg}!`);
         } else {
@@ -796,21 +905,185 @@ function playerAttack(type){
         }
     } else {
         dmg = Math.round(p.atk * rand(0.85,1.15) * mult);
-        logMsg(`⚔️ <b>${p.name}</b> โจมตี! ${dmg} ดาเมจ`);
+        logMsg(`⚔️ <b>${p.name}</b> โจมตี! ${dmg} ดาเมจ (+${SP_PER_ATTACK} SP)`);
     }
     if(mult > 1) logMsg(`&nbsp;&nbsp;🌟 ได้เปรียบธาตุ!`);
 
+    // enemy block check (not on ult — ult pierces)
+    let blocked = false;
+    if(!isUlt && Math.random() < BLOCK_CHANCE){
+        blocked = true;
+        dmg = Math.round(dmg * 0.4);
+    }
+
+    // ===== ULT = epic cinematic sequence =====
+    if(isUlt){
+        ultCinematic(p, e, dmg, mult);
+        return;
+    }
+
     attackFx("player", isSkill);
+    // skill: flying elemental orb that bursts on the monster
+    if(isSkill) projectileFx("player", p.elem, false);
+
+    let delay = isSkill ? 440 : 280;
     setTimeout(()=>{
         e.curHp -= dmg;
         hitFx("enemy"); showDamage("enemy", dmg, isSkill || mult > 1);
-        slashFx("enemy", isSkill ? p.elem : null);
+        if(!isSkill) slashFx("enemy", null);
+        if(blocked){ logMsg(`🛡️ <b>${e.name}</b> บล็อก! ดาเมจลดลง`); showBlock("enemy"); }
         if(typeof playSound === "function") playSound(isSkill ? "levelup" : "click");
         updateBars();
         if(e.curHp <= 0){ setTimeout(() => endBattle(true), 700); return; }
         combat.turn = "enemy";
         setTimeout(enemyTurn, 1000);
-    }, 280);
+    }, delay);
+}
+
+/* ===== EPIC ULTIMATE cinematic ===== */
+function ultCinematic(p, e, dmg, mult){
+    let arena = document.querySelector(".arena");
+    let elemColor = { fire:'#fb7185', water:'#60a5fa', grass:'#34d399' }[p.elem] || '#a78bfa';
+    let elemIcon = { fire:'🔥', water:'💧', grass:'🍃' }[p.elem] || '✨';
+
+    // 1) darken arena + cut-in banner + radial charge aura
+    let overlay = document.createElement("div");
+    overlay.className = "ult-cinema";
+    overlay.style.setProperty("--ec", elemColor);
+    let weaponIcon = fighterWeapon(battle.active, p);
+    overlay.innerHTML = `
+        <div class="ult-streaks"></div>
+        <div class="ult-vignette"></div>
+        <div class="ult-cutin">
+            <div class="ult-charicon">${weaponIcon}</div>
+            <div class="ult-texts">
+                <div class="ult-caster">${p.name}</div>
+                <div class="ult-name">${elemIcon} ${p.ult} ${elemIcon}</div>
+            </div>
+        </div>`;
+    arena.appendChild(overlay);
+    if(typeof playSound === "function") playSound("levelup");
+
+    // 2) charge: glowing aura ring grows around the caster
+    let pSprite = document.getElementById("playerSprite");
+    pSprite.classList.add("ult-charge");
+    let chargeRing = document.createElement("div");
+    chargeRing.className = "ult-charge-ring";
+    chargeRing.style.setProperty("--ec", elemColor);
+    let pSide = document.querySelector(".player-side");
+    if(pSide) pSide.appendChild(chargeRing);
+
+    // 3) launch a volley of orbs (build-up), then the giant finisher
+    setTimeout(()=>{
+        for(let i=0;i<3;i++) setTimeout(()=> projectileFx("player", p.elem, false), i*120);
+    }, 1000);
+    setTimeout(()=>{
+        overlay.classList.add("fade");
+        if(chargeRing) chargeRing.remove();
+        projectileFx("player", p.elem, true); // giant orb
+    }, 1500);
+
+    // 4) cataclysmic impact: multi-hit damage ticks + full spectacle + long quake
+    setTimeout(()=>{
+        pSprite.classList.remove("ult-charge");
+        bigImpact(arena, p.elem);
+        elementUltFx(arena, p.elem);
+        screenFlash();
+        arena.classList.add("arena-quake");
+        if(typeof playSound === "function") playSound("levelup");
+        if(typeof fireConfetti === "function" && (p.rarity === "LR" || p.rarity === "UR")) fireConfetti();
+
+        // split the big number into 3 rapid hits for drama
+        let ticks = 3, per = Math.round(dmg / ticks);
+        for(let i=0;i<ticks;i++){
+            setTimeout(()=>{
+                let d = (i === ticks-1) ? (dmg - per*(ticks-1)) : per;
+                e.curHp = Math.max(0, e.curHp - d);
+                hitFx("enemy"); showDamage("enemy", d, true);
+                updateBars();
+            }, i*180);
+        }
+
+        setTimeout(()=> arena.classList.remove("arena-quake"), 850);
+        setTimeout(()=> overlay.remove(), 400);
+
+        setTimeout(()=>{
+            if(e.curHp <= 0){ endBattle(true); return; }
+            combat.turn = "enemy";
+            enemyTurn();
+        }, 1150);
+    }, 1950);
+}
+
+// element-specific ultimate spectacle layered over the arena
+function elementUltFx(arena, elem){
+    let layer = document.createElement("div");
+    layer.className = "ult-elem-fx elem-" + elem;
+    if(elem === "fire"){
+        // a wall of rising flames + embers
+        let cols = 22, html = "";
+        for(let i=0;i<cols;i++) html += `<span class="flame" style="left:${(i/cols)*100}%; animation-delay:${Math.random()*0.3}s; font-size:${28+Math.random()*22}px">🔥</span>`;
+        for(let i=0;i<16;i++) html += `<span class="ember" style="left:${Math.random()*100}%; animation-delay:${Math.random()*0.5}s"></span>`;
+        layer.innerHTML = html;
+    } else if(elem === "water"){
+        // multiple sweeping waves + splash droplets
+        let html = `<div class="wave"></div><div class="wave wave2"></div><div class="wave wave3"></div>`;
+        for(let i=0;i<18;i++) html += `<span class="drop" style="left:${Math.random()*100}%; animation-delay:${Math.random()*0.4}s"></span>`;
+        layer.innerHTML = html;
+    } else if(elem === "grass"){
+        // a storm of swirling leaves + petals
+        let n = 30, html = "";
+        for(let i=0;i<n;i++) html += `<span class="leaf" style="left:${Math.random()*100}%; top:${Math.random()*100}%; animation-delay:${Math.random()*0.4}s; font-size:${20+Math.random()*18}px">${['🍃','🌿','🍂','🌸'][i%4]}</span>`;
+        layer.innerHTML = html;
+    } else {
+        let n = 24, html = "";
+        for(let i=0;i<n;i++) html += `<span class="leaf" style="left:${Math.random()*100}%; top:${Math.random()*100}%; animation-delay:${Math.random()*0.4}s; font-size:${20+Math.random()*16}px">✨</span>`;
+        layer.innerHTML = html;
+    }
+    arena.appendChild(layer);
+    setTimeout(()=> layer.remove(), 1400);
+}
+
+// huge multi-ring impact for ultimates
+function bigImpact(arena, elem){
+    let toEl = document.getElementById("enemySprite");
+    if(!arena || !toEl) return;
+    let aR = arena.getBoundingClientRect(), tR = toEl.getBoundingClientRect();
+    let x = tR.left + tR.width/2 - aR.left;
+    let y = tR.top + tR.height*0.45 - aR.top;
+    let colors = {
+        fire:  { glow:'#fb7185', ring:'#f59e0b', icon:'🔥' },
+        water: { glow:'#60a5fa', ring:'#22d3ee', icon:'💧' },
+        grass: { glow:'#34d399', ring:'#a3e635', icon:'🍃' }
+    }[elem] || { glow:'#a78bfa', ring:'#c4b5fd', icon:'✨' };
+    // 3 expanding shockwaves + big core + lots of particles
+    for(let k=0;k<3;k++){
+        setTimeout(()=> spawnBurst(arena, x, y, colors, true), k*120);
+    }
+}
+
+function playerUlt(){ playerAttack("ult"); }
+
+// Heal is its own action (only healer fighters). Costs the turn, no attack.
+function playerHeal(){
+    if(combat.over || combat.turn !== "player") return;
+    let p = combat.player;
+    if(!p.heal) return;
+    if(p.curHp >= p.maxHp){ showToast("❤️ HP เต็มอยู่แล้ว"); return; }
+    enableActions(false);
+    let healAmt = Math.round(p.maxHp * HEAL_PERCENT);
+    let before = p.curHp;
+    p.curHp = Math.min(p.maxHp, p.curHp + healAmt);
+    let gained = Math.round(p.curHp - before);
+    // healing also builds a little SP
+    p.sp = Math.min(MAX_SP, p.sp + 1);
+    updateSP();
+    logMsg(`💚 <b>${p.name}</b> ร่ายฟื้นพลัง ฟื้น ${gained} HP! (+1 SP)`);
+    healFx("player");
+    if(typeof playSound === "function") playSound("complete");
+    updateBars();
+    combat.turn = "enemy";
+    setTimeout(enemyTurn, 900);
 }
 
 function enemyTurn(){
@@ -829,6 +1102,7 @@ function enemyTurn(){
         if(p.curHp <= 0){ setTimeout(() => endBattle(false), 700); return; }
         combat.turn = "player";
         enableActions(true);
+        updateSP();
     }, 280);
 }
 
@@ -852,6 +1126,84 @@ function slashFx(targetWho, elem){
 }
 function hitFx(who){ let s = document.getElementById(who==="enemy"?"enemySprite":"playerSprite"); s.classList.remove("shake"); void s.offsetWidth; s.classList.add("shake"); }
 function healFx(who){ let s = document.getElementById(who==="enemy"?"enemySprite":"playerSprite"); s.classList.remove("heal"); void s.offsetWidth; s.classList.add("heal"); }
+
+// element-colored projectile that flies from attacker to target
+// element-styled skill orb that flies precisely from caster to target, then bursts
+function projectileFx(fromWho, elem, big){
+    let arena = document.querySelector(".arena");
+    if(!arena) return;
+    let fromEl = document.getElementById(fromWho === "player" ? "playerSprite" : "enemySprite");
+    let toEl   = document.getElementById(fromWho === "player" ? "enemySprite" : "playerSprite");
+    if(!fromEl || !toEl) return;
+
+    let aR = arena.getBoundingClientRect();
+    let fR = fromEl.getBoundingClientRect();
+    let tR = toEl.getBoundingClientRect();
+    let x0 = fR.left + fR.width/2 - aR.left;
+    let y0 = fR.top  + fR.height*0.45 - aR.top;
+    let x1 = tR.left + tR.width/2 - aR.left;
+    let y1 = tR.top  + tR.height*0.45 - aR.top;
+
+    let colors = {
+        fire:  { core:'#fff3c4', glow:'#fb7185', ring:'#f59e0b', icon:'🔥' },
+        water: { core:'#e0f2ff', glow:'#60a5fa', ring:'#22d3ee', icon:'💧' },
+        grass: { core:'#eaffea', glow:'#34d399', ring:'#a3e635', icon:'🍃' }
+    }[elem] || { core:'#f5e8ff', glow:'#a78bfa', ring:'#c4b5fd', icon:'✨' };
+
+    let orb = document.createElement("div");
+    orb.className = "skill-orb" + (big ? " big" : "");
+    orb.style.setProperty("--core", colors.core);
+    orb.style.setProperty("--glow", colors.glow);
+    orb.style.setProperty("--ring", colors.ring);
+    orb.style.left = x0 + "px";
+    orb.style.top  = y0 + "px";
+    orb.innerHTML = `<span class="orb-icon">${colors.icon}</span>`;
+    arena.appendChild(orb);
+
+    let travel = 420;
+    requestAnimationFrame(()=>{
+        orb.style.transition = `left ${travel}ms cubic-bezier(.45,.05,.55,.95), top ${travel}ms cubic-bezier(.45,.05,.55,.95), transform ${travel}ms linear`;
+        orb.style.left = x1 + "px";
+        orb.style.top  = y1 + "px";
+        orb.style.transform = "translate(-50%,-50%) scale(1.15) rotate(360deg)";
+    });
+    setTimeout(()=>{
+        orb.remove();
+        spawnBurst(arena, x1, y1, colors, big);
+    }, travel);
+}
+
+function spawnBurst(arena, x, y, colors, big){
+    let burst = document.createElement("div");
+    burst.className = "skill-burst" + (big ? " big" : "");
+    burst.style.left = x + "px";
+    burst.style.top  = y + "px";
+    burst.style.setProperty("--glow", colors.glow);
+    burst.style.setProperty("--ring", colors.ring);
+    let parts = "";
+    let n = big ? 10 : 7;
+    for(let i=0;i<n;i++){ parts += `<span class="burst-particle" style="--ang:${(360/n)*i}deg"></span>`; }
+    burst.innerHTML = `<span class="burst-ring"></span><span class="burst-core">${colors.icon}</span>${parts}`;
+    arena.appendChild(burst);
+    setTimeout(()=> burst.remove(), 600);
+}
+function screenFlash(){
+    let arena = document.querySelector(".arena");
+    if(!arena) return;
+    let fl = document.createElement("div");
+    fl.className = "screen-flash";
+    arena.appendChild(fl);
+    setTimeout(()=> fl.remove(), 450);
+}
+function showBlock(who){
+    let side = document.querySelector(who==="enemy"?".enemy-side":".player-side");
+    if(!side) return;
+    let b = document.createElement("div");
+    b.className = "block-pop";
+    b.textContent = "🛡️ BLOCK";
+    side.appendChild(b);
+    setTimeout(()=> b.remove(), 800);
+}
 function showDamage(who, dmg, crit){
     let side = document.querySelector(who==="enemy"?".enemy-side":".player-side");
     let pop = document.createElement("div");
@@ -881,7 +1233,8 @@ function endBattle(win){
 
         // gacha ticket rewards: bosses give tickets
         let ticketGain = 0;
-        if(e.tier === "secret") ticketGain = 3;
+        if(e.ticket) ticketGain = e.ticket;
+        else if(e.tier === "secret") ticketGain = 3;
         else if(e.tier === "bigboss") ticketGain = 2;
         else if(e.tier === "miniboss") ticketGain = 1;
 

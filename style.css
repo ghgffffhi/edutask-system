@@ -647,59 +647,56 @@ li.low { border-left: 4px solid var(--green); }
 }
 .greeting-nextclass b { color: var(--indigo); font-weight: 600; }
 
-/* ===== Chibi Focus Buddy ===== */
+/* ===== Focus Buddy (evolving pet egg) ===== */
 .chibi-host {
     display: flex; flex-direction: column; align-items: center;
     margin: 4px 0 10px; position: relative;
 }
-.chibi-svg {
-    width: 150px; height: 165px;
-    filter: drop-shadow(0 8px 14px rgba(0,0,0,0.25));
+.buddy-wrap {
+    position: relative; width: 120px; height: 120px;
+    display: flex; align-items: center; justify-content: center;
 }
-#chibiBody { transform-origin: 100px 200px; animation: chibiBreathe 3.5s ease-in-out infinite; }
-@keyframes chibiBreathe { 0%,100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-2px) scale(1.012); } }
-#chibiShadow { animation: chibiShadow 3.5s ease-in-out infinite; }
-@keyframes chibiShadow { 0%,100% { transform: scaleX(1); opacity:0.18; } 50% { transform: scaleX(0.92); opacity:0.12; } }
+.buddy-emoji {
+    font-size: 76px; line-height: 1; position: relative; z-index: 2;
+    filter: drop-shadow(0 8px 12px rgba(0,0,0,0.3));
+}
+.buddy-shadow {
+    position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%);
+    width: 64px; height: 12px; border-radius: 50%;
+    background: rgba(0,0,0,0.22); filter: blur(3px); z-index: 1;
+    animation: buddyShadow 3s ease-in-out infinite;
+}
+@keyframes buddyShadow { 0%,100% { transform: translateX(-50%) scaleX(1); opacity:0.22;} 50% { transform: translateX(-50%) scaleX(0.86); opacity:0.14;} }
+.buddy-fx {
+    position: absolute; top: -2px; right: 6px; font-size: 24px; z-index: 3;
+}
 
-/* eye blink */
-#chibiEyes .eye { animation: chibiBlink 4.5s infinite; transform-origin: center; transform-box: fill-box; }
-@keyframes chibiBlink { 0%,92%,100% { transform: scaleY(1);} 95% { transform: scaleY(0.12);} }
+/* idle: gentle float */
+.b-idle .buddy-emoji { animation: buddyFloat 3s ease-in-out infinite; }
+@keyframes buddyFloat { 0%,100% { transform: translateY(0) rotate(-2deg);} 50% { transform: translateY(-8px) rotate(2deg);} }
 
-/* idle: gentle head bob */
-.c-idle #chibiHead { animation: chibiBob 4s ease-in-out infinite; transform-origin: 100px 110px; }
-@keyframes chibiBob { 0%,100% { transform: rotate(0deg);} 25% { transform: rotate(-2.5deg);} 75% { transform: rotate(2.5deg);} }
+/* working: quick excited bounce */
+.b-working .buddy-emoji { animation: buddyWork 0.9s ease-in-out infinite; }
+@keyframes buddyWork { 0%,100% { transform: translateY(0) scale(1);} 50% { transform: translateY(-5px) scale(1.05);} }
 
-/* working: writing arm + focused little nod */
-.c-working #armRight { animation: chibiWrite 0.8s ease-in-out infinite; transform-origin: 133px 124px; }
-@keyframes chibiWrite { 0%,100% { transform: rotate(0deg) translateY(0);} 50% { transform: rotate(-14deg) translateY(2px);} }
-.c-working #chibiBody { animation: chibiBreathe 1.8s ease-in-out infinite; }
-.c-working #chibiHead { animation: chibiFocusNod 2.4s ease-in-out infinite; transform-origin: 100px 110px; }
-@keyframes chibiFocusNod { 0%,100% { transform: translateY(0);} 50% { transform: translateY(1.5px) rotate(1deg);} }
+/* resting: slow sway + Zzz */
+.b-resting .buddy-emoji { animation: buddySway 4s ease-in-out infinite; }
+@keyframes buddySway { 0%,100% { transform: rotate(-5deg);} 50% { transform: rotate(5deg);} }
+.b-resting .buddy-fx { animation: buddyZzz 2.2s ease-in-out infinite; }
+@keyframes buddyZzz { 0% { opacity:0; transform: translateY(6px) scale(0.8);} 50% { opacity:1;} 100% { opacity:0; transform: translateY(-10px) scale(1.1);} }
 
-/* resting: slow sway + ZzZ float */
-.c-resting #chibiBody { animation: chibiSway 4.5s ease-in-out infinite; transform-origin: 100px 200px; }
-@keyframes chibiSway { 0%,100% { transform: rotate(-3deg);} 50% { transform: rotate(3deg);} }
-#chibiZzz text { animation: chibiZzzFloat 2.4s ease-in-out infinite; }
-#chibiZzz text:nth-child(2){ animation-delay: 0.3s; }
-#chibiZzz text:nth-child(3){ animation-delay: 0.6s; }
-@keyframes chibiZzzFloat { 0% { opacity:0; transform: translateY(6px);} 50% { opacity:1;} 100% { opacity:0; transform: translateY(-8px);} }
-
-/* success: happy bounce + arms up + sparkle */
-.c-success #chibiBody { animation: chibiJump 0.6s ease-in-out infinite; transform-origin: 100px 200px; }
-@keyframes chibiJump { 0%,100% { transform: translateY(0);} 35% { transform: translateY(-12px);} 70% { transform: translateY(0);} }
-.c-success #armLeft { transform: rotate(-35deg); transform-origin: 67px 124px; transition:0.3s; }
-.c-success #armRight { transform: rotate(35deg); transform-origin: 133px 124px; transition:0.3s; }
-#chibiSparkle text { animation: chibiSparkle 1.2s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
-#chibiSparkle text:nth-child(2){ animation-delay:0.4s; }
-#chibiSparkle text:nth-child(3){ animation-delay:0.8s; }
-@keyframes chibiSparkle { 0%,100% { opacity:0.3; transform: scale(0.7) rotate(0deg);} 50% { opacity:1; transform: scale(1.15) rotate(20deg);} }
+/* success: happy jump + sparkle */
+.b-success .buddy-emoji { animation: buddyJump 0.55s ease-in-out infinite; }
+@keyframes buddyJump { 0%,100% { transform: translateY(0) scale(1);} 35% { transform: translateY(-16px) scale(1.08);} 70% { transform: translateY(0) scale(1);} }
+.b-success .buddy-fx { animation: buddySparkle 1s ease-in-out infinite; }
+@keyframes buddySparkle { 0%,100% { opacity:0.4; transform: scale(0.8) rotate(0);} 50% { opacity:1; transform: scale(1.2) rotate(18deg);} }
 
 /* speech bubble */
 .chibi-speech {
     margin-top: 4px; background: var(--panel); border: 1px solid var(--border);
     color: var(--text); font-size: 12.5px; font-weight: 500;
     padding: 7px 14px; border-radius: 14px; position: relative;
-    max-width: 200px; text-align: center; opacity: 0; transform: translateY(-4px) scale(0.95);
+    max-width: 210px; text-align: center; opacity: 0; transform: translateY(-4px) scale(0.95);
     transition: 0.25s; pointer-events: none;
 }
 .chibi-speech.show { opacity: 1; transform: translateY(0) scale(1); }
@@ -708,3 +705,43 @@ li.low { border-left: 4px solid var(--green); }
     width: 10px; height: 10px; background: var(--panel);
     border-left: 1px solid var(--border); border-top: 1px solid var(--border);
 }
+
+/* ===== Weather toggle button (rain/snow ambience) ===== */
+.weather-btn {
+    position: fixed; bottom: 18px; left: 18px; z-index: 1200;
+    width: 46px; height: 46px; border-radius: 50%; cursor: pointer;
+    border: 1px solid var(--border);
+    background: var(--panel); backdrop-filter: blur(14px);
+    font-size: 20px; display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3); transition: 0.2s;
+}
+.weather-btn:hover { transform: scale(1.1); border-color: var(--border-glow); }
+@media (max-width: 560px){ .weather-btn { bottom: 12px; left: 12px; width: 40px; height: 40px; font-size: 17px; } }
+
+/* ===== Lo-fi music player (shared across all pages) ===== */
+.lofi-player {
+    position: fixed; bottom: 18px; right: 18px; z-index: 1200;
+    display: flex; align-items: center; gap: 10px;
+    background: var(--panel); border: 1px solid var(--border);
+    border-radius: 999px; padding: 8px 14px 8px 10px;
+    backdrop-filter: blur(14px); box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+    transition: 0.25s; font-family: var(--font);
+}
+.lofi-player:hover { border-color: var(--border-glow); }
+.lofi-btn {
+    width: 38px; height: 38px; border-radius: 50%; border: none; cursor: pointer;
+    background: linear-gradient(135deg,#a78bfa,#7c3aed); color: #fff; font-size: 15px;
+    display: flex; align-items: center; justify-content: center; transition: 0.2s; flex-shrink: 0;
+}
+.lofi-btn:hover { transform: scale(1.08); }
+.lofi-meta { display: flex; flex-direction: column; line-height: 1.2; max-width: 0; overflow: hidden; opacity: 0; transition: 0.3s; }
+.lofi-player.open .lofi-meta, .lofi-player.playing .lofi-meta { max-width: 130px; opacity: 1; }
+.lofi-title { font-size: 12px; font-weight: 600; white-space: nowrap; }
+.lofi-sub { font-size: 10px; color: var(--text2); white-space: nowrap; }
+.lofi-bars { display: flex; align-items: flex-end; gap: 2px; height: 16px; }
+.lofi-bars span { width: 3px; background: var(--mint, #2dd4bf); border-radius: 2px; height: 30%; }
+.lofi-player.playing .lofi-bars span { animation: lofiBar 0.9s ease-in-out infinite; }
+.lofi-bars span:nth-child(2){ animation-delay:0.2s; } .lofi-bars span:nth-child(3){ animation-delay:0.4s; } .lofi-bars span:nth-child(4){ animation-delay:0.6s; }
+@keyframes lofiBar { 0%,100% { height:30%; } 50% { height:100%; } }
+.lofi-vol { width: 64px; accent-color: #a78bfa; cursor: pointer; }
+@media (max-width: 560px){ .lofi-player { bottom: 12px; right: 12px; padding: 6px 10px 6px 8px; } .lofi-vol { display:none; } }

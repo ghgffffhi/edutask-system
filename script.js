@@ -17,7 +17,6 @@ function addTask(){
         text: task,
         date: dateInput.value,
         completed: false,
-        subject: document.getElementById("subjectInput").value,
         priority: document.getElementById("priorityInput").value,
         createdAt: new Date().toLocaleString("th-TH"),
         description: descInput.value.trim(),
@@ -66,7 +65,6 @@ function displayTasks(){
         li.innerHTML = `
             <p class="task-title ${task.completed ? 'done' : ''}">${pinPrefix}${task.text}</p>
             <div class="task-meta">
-                <span class="badge badge-subject">${task.subject}</span>
                 ${dateBadge}
                 ${warnBadge}
             </div>
@@ -168,7 +166,7 @@ function updateCalendar(){
         let div = document.createElement("div");
         div.className = "calendar-item";
         div.innerHTML = `<strong style="font-size:13px">${task.text}</strong><br>
-            <span style="color:var(--text2);font-size:12px">📅 ${task.date} · ${task.subject}</span>`;
+            <span style="color:var(--text2);font-size:12px">📅 ${task.date}</span>`;
         cal.appendChild(div);
     });
 }
