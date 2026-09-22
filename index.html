@@ -110,6 +110,16 @@
                 <div class="greeting-quote" id="greetingQuote"></div>
             </div>
 
+            <!-- Assignments from Teacher (real-time) -->
+            <div class="panel" id="assignPanel" style="display:none">
+                <p class="panel-title">📮 งานจากคุณครู <span class="quest-refresh">อัปเดตแบบเรียลไทม์</span></p>
+                <div id="assignFromTeacher" class="teacher-assign-list"></div>
+                <div class="empty-state" id="assignFromTeacherEmpty" style="display:none">
+                    <div class="empty-emoji">📭</div>
+                    <p>ยังไม่มีงานจากคุณครูตอนนี้</p>
+                </div>
+            </div>
+
             <!-- Weekly Chart -->
             <div class="panel">
                 <p class="panel-title">📈 งานที่ทำเสร็จ 7 วันล่าสุด</p>
@@ -155,12 +165,18 @@
     </div>
 
     <div id="toast"></div>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+    <script src="firebase-init.js"></script>
     <script src="confetti.js"></script>
     <script src="sound.js"></script>
     <script src="lofi.js"></script>
     <script src="weather.js"></script>
     <script src="chibi.js"></script>
     <script src="script.js"></script>
+    <script src="cloud-auth.js"></script>
+    <script src="assignments.js"></script>
 
 </body>
 </html>

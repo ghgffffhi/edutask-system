@@ -1,0 +1,51 @@
+/* ===== Teacher Dashboard ===== */
+.teacher-wrap {
+    max-width: 820px; margin: 26px auto; padding: 0 24px;
+    display: flex; flex-direction: column; gap: 18px;
+}
+
+.code-banner {
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 14px;
+}
+.join-code {
+    font-family: var(--font-num); font-size: 34px; font-weight: 800; letter-spacing: 6px;
+    background: var(--accent); color: #fff; padding: 10px 22px; border-radius: 14px;
+}
+
+.assign-form { display: flex; flex-direction: column; gap: 11px; }
+.assign-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 11px; }
+
+.teacher-assign-list { display: flex; flex-direction: column; gap: 10px; }
+.teacher-assign-card {
+    background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+    border-radius: 14px; padding: 12px 14px;
+}
+.light-mode .teacher-assign-card { background: #f6f8fe; }
+.ta-top { display: flex; align-items: center; gap: 8px; }
+.ta-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+.ta-title { font-weight: 600; font-size: 15px; flex: 1; }
+.ta-del {
+    background: transparent; border: none; color: var(--text2); cursor: pointer;
+    font-size: 13px; padding: 3px 7px; border-radius: 6px; transition: 0.15s;
+}
+.ta-del:hover { background: rgba(251,113,133,0.15); color: var(--rose); }
+.ta-desc { font-size: 13px; color: var(--text2); margin: 6px 0 2px; }
+.ta-meta { font-size: 12px; color: var(--text2); margin-top: 6px; }
+
+.roster-list { display: flex; flex-direction: column; gap: 8px; }
+.roster-card {
+    display: flex; align-items: center; gap: 12px;
+    background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+    border-radius: 12px; padding: 10px 14px;
+}
+.light-mode .roster-card { background: #f6f8fe; }
+.roster-avatar { font-size: 22px; }
+.roster-name { font-weight: 600; font-size: 14px; }
+.roster-id { font-size: 12px; color: var(--text2); }
+
+@media (max-width: 560px) {
+    .teacher-wrap { padding: 0 14px; }
+    .assign-form-row { grid-template-columns: 1fr; }
+    .join-code { font-size: 26px; letter-spacing: 4px; }
+}

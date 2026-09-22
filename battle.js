@@ -17,11 +17,6 @@ function elemMult(atkElem, defElem){
     if(ELEMENTS[defElem] && ELEMENTS[defElem].strong === atkElem) return 0.66; // not very effective
     return 1;
 }
-// which element is super-effective against `defElem`
-function counterElement(defElem){
-    for(let k in ELEMENTS){ if(ELEMENTS[k].strong === defElem) return k; }
-    return null;
-}
 
 /* =========================================================
    FIGHTERS
@@ -79,18 +74,18 @@ const ENEMIES = {
     goblin:  { emoji:'👺', name:'ก็อบลิน',       hp:200, atk:30, lvl:8,  tier:'normal', xp:135, coins:40,  elem:'fire' },
     zombie:  { emoji:'🧟', name:'ซอมบี้',        hp:230, atk:32, lvl:9,  tier:'normal', xp:150, coins:44,  elem:'grass' },
     imp:     { emoji:'👿', name:'ปีศาจน้อย',     hp:250, atk:36, lvl:10, tier:'normal', xp:170, coins:50,  elem:'fire' },
-    // ===== mini bosses (สู้ได้ทุกเมื่อ, ล้มแล้วได้ตัว) — tough: ต้องใช้ธาตุได้เปรียบ =====
-    golem:   { emoji:'🗿', name:'โกเลมหิน',      hp:520, atk:44, lvl:6,  tier:'miniboss', xp:160, coins:60,  reward:'golem', elem:'grass', tough:true },
-    ogre:    { emoji:'👹', name:'ออร์คยักษ์',    hp:720, atk:58, lvl:11, tier:'miniboss', xp:240, coins:90,  elem:'fire', tough:true },
-    kraken:  { emoji:'🐙', name:'คราเคน',        hp:900, atk:66, lvl:13, tier:'miniboss', xp:300, coins:110, elem:'water', tough:true },
-    // ===== big bosses (ต้องทำงานก่อน) — โหด ต้องมีอาวุธ + ธาตุถูก =====
-    demon:   { emoji:'😈', name:'อสูรแดง',       hp:850,  atk:62, lvl:8,  tier:'bigboss', xp:300, coins:140, reward:'demon', needTasks:5,  elem:'fire', tough:true },
-    hydra:   { emoji:'🐲', name:'ไฮดรา 3 หัว',   hp:1200, atk:78, lvl:14, tier:'bigboss', xp:420, coins:200, needTasks:10, elem:'water', tough:true },
-    titan:   { emoji:'🗿', name:'ไททันโบราณ',    hp:1600, atk:92, lvl:16, tier:'bigboss', xp:520, coins:260, needTasks:15, elem:'grass', tough:true },
-    phoenix: { emoji:'🔥', name:'ฟีนิกซ์เพลิง',  hp:2000, atk:104,lvl:18, tier:'bigboss', xp:620, coins:320, needTasks:20, elem:'fire', tough:true },
+    // ===== mini bosses (สู้ได้ทุกเมื่อ, ล้มแล้วได้ตัว) =====
+    golem:   { emoji:'🗿', name:'โกเลมหิน',      hp:300, atk:30, lvl:6,  tier:'miniboss', xp:160, coins:60,  reward:'golem', elem:'grass' },
+    ogre:    { emoji:'👹', name:'ออร์คยักษ์',    hp:420, atk:40, lvl:11, tier:'miniboss', xp:240, coins:90,  elem:'fire' },
+    kraken:  { emoji:'🐙', name:'คราเคน',        hp:500, atk:46, lvl:13, tier:'miniboss', xp:300, coins:110, elem:'water' },
+    // ===== big bosses (ต้องทำงานก่อน) =====
+    demon:   { emoji:'😈', name:'อสูรแดง',       hp:450, atk:42, lvl:8,  tier:'bigboss', xp:300, coins:140, reward:'demon', needTasks:5,  elem:'fire' },
+    hydra:   { emoji:'🐲', name:'ไฮดรา 3 หัว',   hp:650, atk:52, lvl:14, tier:'bigboss', xp:420, coins:200, needTasks:10, elem:'water' },
+    titan:   { emoji:'🗿', name:'ไททันโบราณ',    hp:800, atk:60, lvl:16, tier:'bigboss', xp:520, coins:260, needTasks:15, elem:'grass' },
+    phoenix: { emoji:'🔥', name:'ฟีนิกซ์เพลิง',  hp:900, atk:66, lvl:18, tier:'bigboss', xp:620, coins:320, needTasks:20, elem:'fire' },
     // ===== secret bosses (ตัวลับ โหดสุด) =====
-    reaper:  { emoji:'💀', name:'มัจจุราช',      hp:2400, atk:120, lvl:20, tier:'secret', xp:800,  coins:500,  reward:'reaper', needLvl:13, skin:'reaper_skin', elem:'water', tough:true },
-    voidlord:{ emoji:'🌑', name:'ราชาความว่างเปล่า', hp:4000, atk:150, lvl:30, tier:'secret', xp:1500, coins:1000, needLvl:22, elem:'grass', ticket:5, tough:true }
+    reaper:  { emoji:'💀', name:'มัจจุราช',      hp:900,  atk:75,  lvl:20, tier:'secret', xp:800,  coins:500,  reward:'reaper', needLvl:13, skin:'reaper_skin', elem:'water' },
+    voidlord:{ emoji:'🌑', name:'ราชาความว่างเปล่า', hp:1500, atk:95, lvl:30, tier:'secret', xp:1500, coins:1000, needLvl:22, elem:'grass', ticket:5 }
 };
 
 /* =========================================================
@@ -319,21 +314,6 @@ function activeElem(){
     return FIGHTERS[battle.active].elem;
 }
 
-// signature weapon shown in battle (per-fighter, else by element).
-// if an actual weapon item is equipped, that wins.
-function fighterWeapon(id, f){
-    if(battle.equip && battle.equip.weapon && ITEMS[battle.equip.weapon]){
-        return ITEMS[battle.equip.weapon].emoji;
-    }
-    const SIG = {
-        egg:'💥', chick:'🪶', cat:'🔮', fox:'🗡️', dragon:'🔱', golem:'🪨', demon:'🔥', reaper:'🌙',
-        sakura:'🌸', rin:'⚡', yuki:'❄️', hana:'🌿', mei:'⚔️', akari:'🔥', luna:'🌙', hoshi:'🏹',
-        kurai:'🗡️', nyx:'🌌', solara:'☀️'
-    };
-    if(SIG[id]) return SIG[id];
-    return { fire:'🔥', water:'🔱', grass:'🍃' }[(f&&f.elem)||'grass'] || '⚔️';
-}
-
 /* =========================================================
    COINS (shared with goals economy)
    ========================================================= */
@@ -482,9 +462,6 @@ function renderBag(){
     });
 }
 
-// normal monsters must be beaten in order (ตีตัวก่อนหน้าผ่านก่อน)
-const NORMAL_ORDER = ['slime','bat','ghost','spider','snake','scorpion','wolf','goblin','zombie','imp'];
-
 function renderEnemies(){
     let grid = document.getElementById("enemyGrid");
     grid.innerHTML = "";
@@ -493,16 +470,6 @@ function renderEnemies(){
     Object.keys(ENEMIES).forEach(id => {
         let e = ENEMIES[id];
         let locked = false, lockReason = "";
-
-        // sequential normal-monster unlock: need previous one defeated
-        let nIdx = NORMAL_ORDER.indexOf(id);
-        if(nIdx > 0){
-            let prev = NORMAL_ORDER[nIdx - 1];
-            if(!battle.defeated.includes(prev)){
-                locked = true; lockReason = `ต้องชนะ ${ENEMIES[prev].name} ก่อน`;
-            }
-        }
-        // bosses/secret keep their own conditions
         if(e.needTasks && tasksDone < e.needTasks){ locked = true; lockReason = `ทำงานให้ครบ ${e.needTasks} ชิ้น (${tasksDone}/${e.needTasks})`; }
         if(e.needLvl && battle.level < e.needLvl){ locked = true; lockReason = `ต้องถึง Lv.${e.needLvl} (ตอนนี้ Lv.${battle.level})`; }
 
@@ -519,7 +486,6 @@ function renderEnemies(){
             <div class="enemy-elem" style="color:${ELEMENTS[e.elem].color}">${ELEMENTS[e.elem].icon}</div>
             <div class="enemy-stats">Lv.${e.lvl} · ❤️${e.hp} · ⚔️${e.atk}</div>
             <div class="enemy-reward">🏆 ${e.xp}xp · 🪙${e.coins}${e.reward ? ' · 🔓' : ''}</div>
-            ${e.tough && !locked ? `<div class="enemy-tough">🛡️ ทนทาน! ใช้ธาตุ ${(()=>{let c=counterElement(e.elem);return c?ELEMENTS[c].icon+ELEMENTS[c].name:'';})()} ถึงจะเต็มแรง</div>` : ''}
             ${locked ? `<div class="enemy-lock">${lockReason}</div>` : ''}
         `;
         grid.appendChild(div);
@@ -756,12 +722,14 @@ function startBattleWith(e, isTower){
     document.getElementById("battleView").style.display = "block";
 
     let pSprite = document.getElementById("playerSprite");
-    // In battle we show the fighter's SIGNATURE WEAPON (big & clean) instead of
-    // the portrait — looks cooler and avoids any SVG scaling distortion.
-    let weaponIcon = fighterWeapon(battle.active, f);
-    pSprite.innerHTML = `<span class="weapon-sprite elem-${combat.player.elem}">${weaponIcon}</span>`;
-    pSprite.classList.remove("is-chibi");
-    pSprite.classList.add("is-weapon");
+    if(f.anime && typeof animeFighterSVG === "function"){
+        pSprite.innerHTML = animeFighterSVG(f.anime, "idle");
+        pSprite.classList.add("is-chibi");
+    } else {
+        let pEmoji = (battle.skin && SKINS[battle.skin]) ? SKINS[battle.skin].emoji : f.emoji;
+        pSprite.textContent = pEmoji;
+        pSprite.classList.remove("is-chibi");
+    }
     document.getElementById("playerName").innerHTML = `${f.name} Lv.${battle.level} <span style="color:${ELEMENTS[combat.player.elem].color}">${ELEMENTS[combat.player.elem].icon}</span>`;
     document.getElementById("enemySprite").textContent = e.emoji;
     document.getElementById("enemyName").innerHTML = `${e.name} <span style="color:${ELEMENTS[e.elem].color}">${ELEMENTS[e.elem].icon}</span>`;
@@ -776,11 +744,6 @@ function startBattleWith(e, isTower){
     let mult = elemMult(combat.player.elem, e.elem);
     if(mult > 1) logMsg(`🌟 ธาตุของเธอได้เปรียบ! (x1.5)`);
     else if(mult < 1) logMsg(`⚠️ ธาตุของเธอเสียเปรียบ (x0.66)`);
-    if(e.tough){
-        let c = counterElement(e.elem);
-        if(mult <= 1) logMsg(`🛡️ <b>${e.name}</b> เป็นบอสทนทาน! ดาเมจจะโดนลดครึ่ง ถ้าไม่ใช้ธาตุ${c?ELEMENTS[c].name:''} — แนะนำเปลี่ยนตัว/อาวุธก่อนนะ`);
-        else logMsg(`🛡️ บอสทนทาน แต่ธาตุเธอได้เปรียบ — ลุยเลย!`);
-    }
     updateBars();
     updateSP();
     enableActions(true);
@@ -885,9 +848,6 @@ function playerAttack(type){
     enableActions(false);
 
     let mult = elemMult(p.elem, e.elem);
-    // TOUGH bosses: take half damage unless you have element advantage.
-    // forces the player to bring the right element + gear, not one fighter for all.
-    if(e.tough && mult <= 1) mult *= 0.5;
     let dmg;
 
     if(isUlt){
@@ -916,150 +876,23 @@ function playerAttack(type){
         dmg = Math.round(dmg * 0.4);
     }
 
-    // ===== ULT = epic cinematic sequence =====
-    if(isUlt){
-        ultCinematic(p, e, dmg, mult);
-        return;
-    }
+    attackFx("player", isSkill || isUlt);
+    // projectile for skill/ult (element-colored)
+    if(isSkill || isUlt) projectileFx("player", p.elem, isUlt);
 
-    attackFx("player", isSkill);
-    // skill: flying elemental orb that bursts on the monster
-    if(isSkill) projectileFx("player", p.elem, false);
-
-    let delay = isSkill ? 440 : 280;
+    let delay = (isSkill || isUlt) ? 520 : 280;
     setTimeout(()=>{
         e.curHp -= dmg;
-        hitFx("enemy"); showDamage("enemy", dmg, isSkill || mult > 1);
-        if(!isSkill) slashFx("enemy", null);
+        hitFx("enemy"); showDamage("enemy", dmg, isSkill || isUlt || mult > 1);
+        slashFx("enemy", (isSkill||isUlt) ? p.elem : null);
         if(blocked){ logMsg(`🛡️ <b>${e.name}</b> บล็อก! ดาเมจลดลง`); showBlock("enemy"); }
-        if(typeof playSound === "function") playSound(isSkill ? "levelup" : "click");
+        if(isUlt) screenFlash();
+        if(typeof playSound === "function") playSound(isUlt ? "levelup" : isSkill ? "levelup" : "click");
         updateBars();
         if(e.curHp <= 0){ setTimeout(() => endBattle(true), 700); return; }
         combat.turn = "enemy";
         setTimeout(enemyTurn, 1000);
     }, delay);
-}
-
-/* ===== EPIC ULTIMATE cinematic ===== */
-function ultCinematic(p, e, dmg, mult){
-    let arena = document.querySelector(".arena");
-    let elemColor = { fire:'#fb7185', water:'#60a5fa', grass:'#34d399' }[p.elem] || '#a78bfa';
-    let elemIcon = { fire:'🔥', water:'💧', grass:'🍃' }[p.elem] || '✨';
-
-    // 1) darken arena + cut-in banner + radial charge aura
-    let overlay = document.createElement("div");
-    overlay.className = "ult-cinema";
-    overlay.style.setProperty("--ec", elemColor);
-    let weaponIcon = fighterWeapon(battle.active, p);
-    overlay.innerHTML = `
-        <div class="ult-streaks"></div>
-        <div class="ult-vignette"></div>
-        <div class="ult-cutin">
-            <div class="ult-charicon">${weaponIcon}</div>
-            <div class="ult-texts">
-                <div class="ult-caster">${p.name}</div>
-                <div class="ult-name">${elemIcon} ${p.ult} ${elemIcon}</div>
-            </div>
-        </div>`;
-    arena.appendChild(overlay);
-    if(typeof playSound === "function") playSound("levelup");
-
-    // 2) charge: glowing aura ring grows around the caster
-    let pSprite = document.getElementById("playerSprite");
-    pSprite.classList.add("ult-charge");
-    let chargeRing = document.createElement("div");
-    chargeRing.className = "ult-charge-ring";
-    chargeRing.style.setProperty("--ec", elemColor);
-    let pSide = document.querySelector(".player-side");
-    if(pSide) pSide.appendChild(chargeRing);
-
-    // 3) launch a volley of orbs (build-up), then the giant finisher
-    setTimeout(()=>{
-        for(let i=0;i<3;i++) setTimeout(()=> projectileFx("player", p.elem, false), i*120);
-    }, 1000);
-    setTimeout(()=>{
-        overlay.classList.add("fade");
-        if(chargeRing) chargeRing.remove();
-        projectileFx("player", p.elem, true); // giant orb
-    }, 1500);
-
-    // 4) cataclysmic impact: multi-hit damage ticks + full spectacle + long quake
-    setTimeout(()=>{
-        pSprite.classList.remove("ult-charge");
-        bigImpact(arena, p.elem);
-        elementUltFx(arena, p.elem);
-        screenFlash();
-        arena.classList.add("arena-quake");
-        if(typeof playSound === "function") playSound("levelup");
-        if(typeof fireConfetti === "function" && (p.rarity === "LR" || p.rarity === "UR")) fireConfetti();
-
-        // split the big number into 3 rapid hits for drama
-        let ticks = 3, per = Math.round(dmg / ticks);
-        for(let i=0;i<ticks;i++){
-            setTimeout(()=>{
-                let d = (i === ticks-1) ? (dmg - per*(ticks-1)) : per;
-                e.curHp = Math.max(0, e.curHp - d);
-                hitFx("enemy"); showDamage("enemy", d, true);
-                updateBars();
-            }, i*180);
-        }
-
-        setTimeout(()=> arena.classList.remove("arena-quake"), 850);
-        setTimeout(()=> overlay.remove(), 400);
-
-        setTimeout(()=>{
-            if(e.curHp <= 0){ endBattle(true); return; }
-            combat.turn = "enemy";
-            enemyTurn();
-        }, 1150);
-    }, 1950);
-}
-
-// element-specific ultimate spectacle layered over the arena
-function elementUltFx(arena, elem){
-    let layer = document.createElement("div");
-    layer.className = "ult-elem-fx elem-" + elem;
-    if(elem === "fire"){
-        // a wall of rising flames + embers
-        let cols = 22, html = "";
-        for(let i=0;i<cols;i++) html += `<span class="flame" style="left:${(i/cols)*100}%; animation-delay:${Math.random()*0.3}s; font-size:${28+Math.random()*22}px">🔥</span>`;
-        for(let i=0;i<16;i++) html += `<span class="ember" style="left:${Math.random()*100}%; animation-delay:${Math.random()*0.5}s"></span>`;
-        layer.innerHTML = html;
-    } else if(elem === "water"){
-        // multiple sweeping waves + splash droplets
-        let html = `<div class="wave"></div><div class="wave wave2"></div><div class="wave wave3"></div>`;
-        for(let i=0;i<18;i++) html += `<span class="drop" style="left:${Math.random()*100}%; animation-delay:${Math.random()*0.4}s"></span>`;
-        layer.innerHTML = html;
-    } else if(elem === "grass"){
-        // a storm of swirling leaves + petals
-        let n = 30, html = "";
-        for(let i=0;i<n;i++) html += `<span class="leaf" style="left:${Math.random()*100}%; top:${Math.random()*100}%; animation-delay:${Math.random()*0.4}s; font-size:${20+Math.random()*18}px">${['🍃','🌿','🍂','🌸'][i%4]}</span>`;
-        layer.innerHTML = html;
-    } else {
-        let n = 24, html = "";
-        for(let i=0;i<n;i++) html += `<span class="leaf" style="left:${Math.random()*100}%; top:${Math.random()*100}%; animation-delay:${Math.random()*0.4}s; font-size:${20+Math.random()*16}px">✨</span>`;
-        layer.innerHTML = html;
-    }
-    arena.appendChild(layer);
-    setTimeout(()=> layer.remove(), 1400);
-}
-
-// huge multi-ring impact for ultimates
-function bigImpact(arena, elem){
-    let toEl = document.getElementById("enemySprite");
-    if(!arena || !toEl) return;
-    let aR = arena.getBoundingClientRect(), tR = toEl.getBoundingClientRect();
-    let x = tR.left + tR.width/2 - aR.left;
-    let y = tR.top + tR.height*0.45 - aR.top;
-    let colors = {
-        fire:  { glow:'#fb7185', ring:'#f59e0b', icon:'🔥' },
-        water: { glow:'#60a5fa', ring:'#22d3ee', icon:'💧' },
-        grass: { glow:'#34d399', ring:'#a3e635', icon:'🍃' }
-    }[elem] || { glow:'#a78bfa', ring:'#c4b5fd', icon:'✨' };
-    // 3 expanding shockwaves + big core + lots of particles
-    for(let k=0;k<3;k++){
-        setTimeout(()=> spawnBurst(arena, x, y, colors, true), k*120);
-    }
 }
 
 function playerUlt(){ playerAttack("ult"); }
@@ -1128,64 +961,15 @@ function hitFx(who){ let s = document.getElementById(who==="enemy"?"enemySprite"
 function healFx(who){ let s = document.getElementById(who==="enemy"?"enemySprite":"playerSprite"); s.classList.remove("heal"); void s.offsetWidth; s.classList.add("heal"); }
 
 // element-colored projectile that flies from attacker to target
-// element-styled skill orb that flies precisely from caster to target, then bursts
 function projectileFx(fromWho, elem, big){
     let arena = document.querySelector(".arena");
     if(!arena) return;
-    let fromEl = document.getElementById(fromWho === "player" ? "playerSprite" : "enemySprite");
-    let toEl   = document.getElementById(fromWho === "player" ? "enemySprite" : "playerSprite");
-    if(!fromEl || !toEl) return;
-
-    let aR = arena.getBoundingClientRect();
-    let fR = fromEl.getBoundingClientRect();
-    let tR = toEl.getBoundingClientRect();
-    let x0 = fR.left + fR.width/2 - aR.left;
-    let y0 = fR.top  + fR.height*0.45 - aR.top;
-    let x1 = tR.left + tR.width/2 - aR.left;
-    let y1 = tR.top  + tR.height*0.45 - aR.top;
-
-    let colors = {
-        fire:  { core:'#fff3c4', glow:'#fb7185', ring:'#f59e0b', icon:'🔥' },
-        water: { core:'#e0f2ff', glow:'#60a5fa', ring:'#22d3ee', icon:'💧' },
-        grass: { core:'#eaffea', glow:'#34d399', ring:'#a3e635', icon:'🍃' }
-    }[elem] || { core:'#f5e8ff', glow:'#a78bfa', ring:'#c4b5fd', icon:'✨' };
-
-    let orb = document.createElement("div");
-    orb.className = "skill-orb" + (big ? " big" : "");
-    orb.style.setProperty("--core", colors.core);
-    orb.style.setProperty("--glow", colors.glow);
-    orb.style.setProperty("--ring", colors.ring);
-    orb.style.left = x0 + "px";
-    orb.style.top  = y0 + "px";
-    orb.innerHTML = `<span class="orb-icon">${colors.icon}</span>`;
-    arena.appendChild(orb);
-
-    let travel = 420;
-    requestAnimationFrame(()=>{
-        orb.style.transition = `left ${travel}ms cubic-bezier(.45,.05,.55,.95), top ${travel}ms cubic-bezier(.45,.05,.55,.95), transform ${travel}ms linear`;
-        orb.style.left = x1 + "px";
-        orb.style.top  = y1 + "px";
-        orb.style.transform = "translate(-50%,-50%) scale(1.15) rotate(360deg)";
-    });
-    setTimeout(()=>{
-        orb.remove();
-        spawnBurst(arena, x1, y1, colors, big);
-    }, travel);
-}
-
-function spawnBurst(arena, x, y, colors, big){
-    let burst = document.createElement("div");
-    burst.className = "skill-burst" + (big ? " big" : "");
-    burst.style.left = x + "px";
-    burst.style.top  = y + "px";
-    burst.style.setProperty("--glow", colors.glow);
-    burst.style.setProperty("--ring", colors.ring);
-    let parts = "";
-    let n = big ? 10 : 7;
-    for(let i=0;i<n;i++){ parts += `<span class="burst-particle" style="--ang:${(360/n)*i}deg"></span>`; }
-    burst.innerHTML = `<span class="burst-ring"></span><span class="burst-core">${colors.icon}</span>${parts}`;
-    arena.appendChild(burst);
-    setTimeout(()=> burst.remove(), 600);
+    let proj = document.createElement("div");
+    let icon = { fire:"🔥", water:"💧", grass:"🍃" }[elem] || "✨";
+    proj.className = "projectile" + (big ? " big" : "") + (fromWho==="player" ? " from-player" : " from-enemy");
+    proj.textContent = icon;
+    arena.appendChild(proj);
+    setTimeout(()=> proj.remove(), 560);
 }
 function screenFlash(){
     let arena = document.querySelector(".arena");

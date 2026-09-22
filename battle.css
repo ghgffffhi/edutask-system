@@ -176,9 +176,6 @@
 .player-sprite { animation: playerIdle 2.5s ease-in-out infinite; transform: scaleX(-1); }
 @keyframes enemyIdle { 0%,100% { transform: translateY(0);} 50% { transform: translateY(-8px);} }
 @keyframes playerIdle { 0%,100% { transform: scaleX(-1) translateY(0);} 50% { transform: scaleX(-1) translateY(-8px);} }
-/* anime portrait player faces forward (no mirror flip = no distortion) */
-.player-sprite.is-chibi { animation: playerIdleChibi 2.5s ease-in-out infinite; transform: none; }
-@keyframes playerIdleChibi { 0%,100% { transform: translateY(0);} 50% { transform: translateY(-8px);} }
 
 .combatant-sprite.shake { animation: hitShake 0.4s; }
 @keyframes hitShake {
@@ -194,14 +191,6 @@
     20% { transform: scaleX(-1) translateX(-8px); filter: brightness(2) drop-shadow(0 0 10px #fff); }
     40% { transform: scaleX(-1) translateX(8px); }
     60% { transform: scaleX(-1) translateX(-6px); }
-}
-/* anime portrait shake — no flip */
-.player-sprite.is-chibi.shake { animation: hitShakeChibi 0.4s; }
-@keyframes hitShakeChibi {
-    0%,100% { transform: translateX(0); }
-    20% { transform: translateX(-8px); filter: brightness(2) drop-shadow(0 0 10px #fff); }
-    40% { transform: translateX(8px); }
-    60% { transform: translateX(-6px); }
 }
 .combatant-sprite.heal { animation: healGlow 0.6s; }
 @keyframes healGlow { 0%,100% { filter: drop-shadow(0 12px 20px rgba(0,0,0,0.4)); } 50% { filter: drop-shadow(0 0 20px #34d399) brightness(1.3); } }
@@ -404,18 +393,11 @@
 .lb-row.lb-me .lb-name { color: var(--violet); }
 .lb-floor { font-size: 13px; font-family: var(--font-num); color: var(--amber); font-weight: 600; }
 
-/* ===== Anime portrait sprites in battle (fixed: no clip, no flip, smaller) ===== */
-.combatant-sprite.is-chibi {
-    font-size: 0; line-height: 0; overflow: visible;
-    display: flex; align-items: flex-end; justify-content: center;
-}
-.combatant-sprite.is-chibi .fighter-chibi,
-.combatant-sprite.is-chibi .anime-fighter {
-    width: 116px; height: 122px; display: block; overflow: visible;
-}
-.player-sprite.is-chibi { transform: none; }
-.player-sprite.is-chibi .fighter-chibi,
-.player-sprite.is-chibi .anime-fighter { transform: none; }
+/* ===== Chibi sprites in battle ===== */
+.combatant-sprite.is-chibi { font-size: 0; }
+.combatant-sprite.is-chibi .fighter-chibi { width: 130px; height: 137px; }
+.player-sprite.is-chibi { transform: scaleX(-1); }
+.player-sprite.is-chibi .fighter-chibi { transform: none; }
 
 /* fighter chibi idle bob */
 .fighter-chibi .f-body { animation: fchibiBob 3s ease-in-out infinite; transform-origin: 100px 195px; }
@@ -427,9 +409,11 @@
 /* ===== Attack animations ===== */
 .combatant-sprite { transition: transform 0.18s cubic-bezier(.4,0,.6,1); }
 .combatant-sprite.lunge-right { animation: lungeR 0.42s ease-out; }
-@keyframes lungeR { 0% { transform: translateX(0);} 45% { transform: translateX(56px) scale(1.06);} 100% { transform: translateX(0);} }
+.combatant-sprite.player-sprite.is-chibi.lunge-right { animation: lungeR-chibi 0.42s ease-out; }
+@keyframes lungeR { 0% { transform: translateX(0);} 45% { transform: translateX(60px) scale(1.08);} 100% { transform: translateX(0);} }
+@keyframes lungeR-chibi { 0% { transform: scaleX(-1) translateX(0);} 45% { transform: scaleX(-1) translateX(60px) scale(1.08);} 100% { transform: scaleX(-1) translateX(0);} }
 .combatant-sprite.lunge-left { animation: lungeL 0.42s ease-out; }
-@keyframes lungeL { 0% { transform: translateX(0);} 45% { transform: translateX(-56px) scale(1.06);} 100% { transform: translateX(0);} }
+@keyframes lungeL { 0% { transform: translateX(0);} 45% { transform: translateX(-60px) scale(1.08);} 100% { transform: translateX(0);} }
 .combatant-sprite.skill-glow { filter: drop-shadow(0 0 16px var(--accent-solid, #a78bfa)) brightness(1.3); }
 
 /* slash effect */
@@ -512,177 +496,16 @@
 .action-btn.skill.sp-low { opacity:0.45; filter:grayscale(0.5); }
 .action-btn.heal { background: linear-gradient(135deg,#22c55e,#16a34a); color:#fff; flex:0 0 auto; padding:14px 18px; }
 
-/* ult button — glows ONLY when ult-ready (SP full) */
-.action-btn.ult { background: linear-gradient(135deg,#f0abfc,#a855f7); color:#fff; flex:0 0 auto; padding:14px 18px; position:relative; transition:0.2s; }
-.action-btn.ult.sp-low { opacity:0.45; filter:grayscale(0.55); box-shadow:none; animation:none; }
-.action-btn.ult.ult-ready { animation: ultPulse 1.1s infinite; box-shadow:0 0 18px rgba(240,171,252,0.75); }
-@keyframes ultPulse { 0%,100% { box-shadow:0 0 10px rgba(240,171,252,0.5);} 50% { box-shadow:0 0 28px rgba(240,171,252,0.95);} }
-
-/* ===== anime fighter in battle (single source of truth) ===== */
+/* ===== full-body anime fighter in battle ===== */
+.combatant-sprite.is-chibi .anime-fighter { width: 132px; height: 139px; }
 .anime-fighter .af-body { animation: afBob 3s ease-in-out infinite; transform-origin: 100px 150px; }
 @keyframes afBob { 0%,100% { transform: translateY(0);} 50% { transform: translateY(-4px);} }
 .anime-fighter .af-aura { animation: afAura 2.6s ease-in-out infinite; transform-origin:center; }
 @keyframes afAura { 0%,100% { opacity:0.4; transform:scale(0.95);} 50% { opacity:0.7; transform:scale(1.06);} }
 .anime-fighter .af-eyes { animation: chibiBlink 4.8s infinite; transform-origin:center; transform-box:fill-box; }
-.bag-chibi .anime-fighter { width: 64px; height: 67px; display:block; overflow:visible; }
-.gacha-result-chibi .anime-fighter { width: 150px; height: 158px; display:block; overflow:visible; animation: gachaFloat 2.5s ease-in-out infinite; }
+.bag-chibi .anime-fighter { width: 64px; height: 67px; }
+.gacha-result-chibi .anime-fighter { width: 150px; height: 158px; animation: gachaFloat 2.5s ease-in-out infinite; }
 
-/* ===== skill orb (flies precisely to target) + impact burst ===== */
-.skill-orb {
-    position:absolute; width:30px; height:30px; z-index:6; pointer-events:none;
-    transform: translate(-50%,-50%); border-radius:50%;
-    background: radial-gradient(circle at 35% 35%, var(--core), var(--glow) 60%, transparent 72%);
-    box-shadow: 0 0 16px 4px var(--glow), 0 0 30px 8px var(--ring);
-}
-.skill-orb.big { width:46px; height:46px; box-shadow: 0 0 26px 8px var(--glow), 0 0 50px 16px var(--ring); }
-.skill-orb::after { content:""; position:absolute; inset:-6px; border-radius:50%; border:2px solid var(--ring); opacity:0.5; animation: orbPulse 0.5s ease-in-out infinite; }
-@keyframes orbPulse { 0%,100% { transform:scale(1); opacity:0.5;} 50% { transform:scale(1.3); opacity:0.1;} }
-.orb-icon { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:18px; }
-.skill-orb.big .orb-icon { font-size:26px; }
-
-.skill-burst { position:absolute; width:0; height:0; z-index:7; pointer-events:none; transform: translate(-50%,-50%); }
-.burst-ring { position:absolute; left:50%; top:50%; width:20px; height:20px; transform: translate(-50%,-50%); border-radius:50%; border:3px solid var(--ring); animation: burstRing 0.55s ease-out forwards; }
-.skill-burst.big .burst-ring { border-width:4px; animation: burstRingBig 0.6s ease-out forwards; }
-@keyframes burstRing { 0% { width:10px; height:10px; opacity:0.9;} 100% { width:130px; height:130px; opacity:0; border-width:1px;} }
-@keyframes burstRingBig { 0% { width:14px; height:14px; opacity:1;} 100% { width:200px; height:200px; opacity:0; border-width:1px;} }
-.burst-core { position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); font-size:34px; filter: drop-shadow(0 0 12px var(--glow)); animation: burstCore 0.5s ease-out forwards; }
-.skill-burst.big .burst-core { font-size:56px; }
-@keyframes burstCore { 0% { transform:translate(-50%,-50%) scale(0.3); opacity:0;} 35% { transform:translate(-50%,-50%) scale(1.4); opacity:1;} 100% { transform:translate(-50%,-50%) scale(1.1); opacity:0;} }
-.burst-particle { position:absolute; left:50%; top:50%; width:7px; height:7px; border-radius:50%; background: var(--glow); box-shadow:0 0 8px var(--ring); animation: burstPart 0.55s ease-out forwards; transform: translate(-50%,-50%) rotate(var(--ang)) translateY(0); }
-@keyframes burstPart { 0% { opacity:1; transform: translate(-50%,-50%) rotate(var(--ang)) translateY(0) scale(1);} 100% { opacity:0; transform: translate(-50%,-50%) rotate(var(--ang)) translateY(-46px) scale(0.3);} }
-.skill-burst.big .burst-particle { width:9px; height:9px; animation: burstPartBig 0.6s ease-out forwards; }
-@keyframes burstPartBig { 0% { opacity:1; transform: translate(-50%,-50%) rotate(var(--ang)) translateY(0) scale(1.2);} 100% { opacity:0; transform: translate(-50%,-50%) rotate(var(--ang)) translateY(-72px) scale(0.3);} }
-
-/* (Lo-fi player CSS moved to style.css so it loads on every page) */
-
-
-/* screen flash on ult + block popup (were missing) */
-.screen-flash { position:absolute; inset:0 20px; border-radius:24px; background:radial-gradient(circle, rgba(255,255,255,0.85), transparent 70%); z-index:8; pointer-events:none; animation: flashFade 0.45s ease-out forwards; }
-@keyframes flashFade { 0% { opacity:0;} 30% { opacity:1;} 100% { opacity:0;} }
-.block-pop { position:absolute; top:18%; left:50%; transform:translateX(-50%); font-size:14px; font-weight:800; color:#60a5fa; text-shadow:0 2px 6px rgba(0,0,0,0.5); z-index:9; pointer-events:none; animation: blockPop 0.8s ease-out forwards; }
-@keyframes blockPop { 0% { opacity:0; transform:translateX(-50%) translateY(8px) scale(0.6);} 30% { opacity:1; transform:translateX(-50%) translateY(0) scale(1.1);} 100% { opacity:0; transform:translateX(-50%) translateY(-16px) scale(1);} }
-
-/* ===== Weapon sprite in battle (replaces portrait, no distortion) ===== */
-.combatant-sprite.is-weapon { font-size:0; overflow:visible; display:flex; align-items:center; justify-content:center; }
-.weapon-sprite {
-    font-size: 76px; line-height:1; display:inline-block;
-    filter: drop-shadow(0 6px 14px rgba(0,0,0,0.45));
-    animation: weaponFloat 2.6s ease-in-out infinite;
-}
-@keyframes weaponFloat { 0%,100% { transform: translateY(0) rotate(-6deg);} 50% { transform: translateY(-10px) rotate(6deg);} }
-.weapon-sprite.elem-fire  { filter: drop-shadow(0 0 14px rgba(251,113,133,0.8)) drop-shadow(0 6px 10px rgba(0,0,0,0.4)); }
-.weapon-sprite.elem-water { filter: drop-shadow(0 0 14px rgba(96,165,250,0.8)) drop-shadow(0 6px 10px rgba(0,0,0,0.4)); }
-.weapon-sprite.elem-grass { filter: drop-shadow(0 0 14px rgba(52,211,153,0.8)) drop-shadow(0 6px 10px rgba(0,0,0,0.4)); }
-@media (max-width: 560px){ .weapon-sprite { font-size: 58px; } }
-
-/* ===== EPIC ULTIMATE cinematic ===== */
-.ult-cinema {
-    position: absolute; inset: 0; z-index: 20; pointer-events: none; overflow: hidden;
-    background: radial-gradient(circle at center, rgba(0,0,0,0.35), rgba(0,0,0,0.82));
-    animation: ultCinemaIn 0.3s ease-out;
-}
-.ult-cinema.fade { animation: ultCinemaOut 0.4s ease-in forwards; }
-@keyframes ultCinemaIn { 0% { opacity:0; } 100% { opacity:1; } }
-@keyframes ultCinemaOut { 0% { opacity:1; } 100% { opacity:0; } }
-
-/* diagonal speed streaks */
-.ult-streaks { position:absolute; inset:0; opacity:0.5;
-    background: repeating-linear-gradient(115deg, transparent 0 22px, var(--ec) 22px 24px);
-    mix-blend-mode: screen; animation: ultStreak 0.7s linear infinite; }
-@keyframes ultStreak { 0% { background-position:0 0; } 100% { background-position:-120px 0; } }
-
-/* character cut-in banner sliding across */
-.ult-cutin {
-    position:absolute; top:50%; left:0; right:0; transform:translateY(-50%);
-    display:flex; align-items:center; gap:18px; padding:18px 30px;
-    background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--ec) 55%, #000) 25%, color-mix(in srgb, var(--ec) 55%, #000) 75%, transparent);
-    border-top:2px solid var(--ec); border-bottom:2px solid var(--ec);
-    animation: cutinSlide 1.5s cubic-bezier(.2,.7,.3,1);
-}
-@keyframes cutinSlide {
-    0% { transform:translateY(-50%) translateX(-120%); opacity:0; }
-    18% { transform:translateY(-50%) translateX(0); opacity:1; }
-    78% { transform:translateY(-50%) translateX(0); opacity:1; }
-    100% { transform:translateY(-50%) translateX(120%); opacity:0; }
-}
-.ult-charicon { font-size:64px; filter: drop-shadow(0 0 14px var(--ec)); animation: charIconPop 1.5s ease; flex-shrink:0; }
-@keyframes charIconPop { 0%,18% { transform:scale(0) rotate(-30deg);} 35% { transform:scale(1.25) rotate(8deg);} 50% { transform:scale(1) rotate(0);} }
-.ult-texts { display:flex; flex-direction:column; gap:4px; }
-.ult-caster { font-size:16px; font-weight:600; color:#fff; opacity:0.9; letter-spacing:1px; }
-.ult-name {
-    font-size:34px; font-weight:800; color:#fff; line-height:1.05;
-    text-shadow: 0 0 18px var(--ec), 0 2px 4px rgba(0,0,0,0.6);
-    animation: ultNameGlow 0.6s ease-in-out infinite alternate;
-}
-@keyframes ultNameGlow { 0% { text-shadow:0 0 12px var(--ec), 0 2px 4px rgba(0,0,0,0.6);} 100% { text-shadow:0 0 26px var(--ec), 0 0 40px var(--ec), 0 2px 4px rgba(0,0,0,0.6);} }
-
-/* player charging glow before release */
-.combatant-sprite.ult-charge { animation: ultCharge 1.1s ease-in-out; }
-@keyframes ultCharge {
-    0% { filter: drop-shadow(0 6px 14px rgba(0,0,0,0.45)); transform: scale(1); }
-    60% { filter: drop-shadow(0 0 30px #fff) brightness(1.6); transform: scale(1.12); }
-    100% { filter: drop-shadow(0 0 50px var(--accent-solid,#a78bfa)) brightness(2); transform: scale(0.92); }
-}
-
-/* arena screen-shake on ult impact */
-.arena.arena-quake { animation: arenaQuake 0.6s ease-in-out; }
-@keyframes arenaQuake {
-    0%,100% { transform: translate(0,0); }
-    15% { transform: translate(-8px,4px) rotate(-0.4deg); }
-    30% { transform: translate(7px,-5px) rotate(0.4deg); }
-    45% { transform: translate(-6px,-3px); }
-    60% { transform: translate(5px,4px); }
-    75% { transform: translate(-3px,2px); }
-}
-@media (max-width:560px){ .ult-name { font-size:24px; } .ult-charicon { font-size:46px; } }
-
-/* ===== tough boss hint ===== */
-.enemy-tough { font-size:10px; color:#fbbf24; margin-top:4px; line-height:1.3; font-weight:600; }
-
-/* ===== element-specific ULTIMATE spectacle ===== */
-.ult-elem-fx { position:absolute; inset:0; z-index:21; pointer-events:none; overflow:hidden; }
-
-/* FIRE — rising flames */
-.ult-elem-fx .flame { position:absolute; bottom:-30px; font-size:46px; animation: flameRise 0.9s ease-out forwards; filter: drop-shadow(0 0 12px #fb7185); }
-@keyframes flameRise { 0% { bottom:-40px; opacity:0; transform:scale(0.6);} 30% { opacity:1;} 100% { bottom:75%; opacity:0; transform:scale(1.3);} }
-
-/* WATER — sweeping waves */
-.ult-elem-fx .wave { position:absolute; left:-20%; right:-20%; bottom:0; height:60%;
-    background: radial-gradient(ellipse at center bottom, rgba(96,165,250,0.7), rgba(34,211,238,0.3) 60%, transparent 75%);
-    border-radius:50% 50% 0 0; animation: waveUp 0.95s ease-out forwards; }
-.ult-elem-fx .wave2 { animation-delay:0.15s; opacity:0.6; }
-@keyframes waveUp { 0% { transform:translateY(100%) scaleY(0.3); opacity:0;} 35% { opacity:1;} 100% { transform:translateY(-10%) scaleY(1.2); opacity:0;} }
-
-/* GRASS — swirling leaves */
-.ult-elem-fx .leaf { position:absolute; font-size:26px; animation: leafSwirl 1s ease-out forwards; filter: drop-shadow(0 0 8px #34d399); }
-@keyframes leafSwirl { 0% { opacity:0; transform:scale(0.4) rotate(0);} 30% { opacity:1;} 100% { opacity:0; transform:scale(1.2) rotate(360deg) translateY(-40px);} }
-
-/* ===== Ult cinematic extras (vignette, charge ring, embers, drops, wave3) ===== */
-.ult-vignette { position:absolute; inset:0; pointer-events:none;
-    background: radial-gradient(circle at center, transparent 40%, color-mix(in srgb, var(--ec) 45%, #000) 100%);
-    opacity:0.7; animation: vigPulse 1.6s ease-in-out; }
-@keyframes vigPulse { 0% { opacity:0;} 30% { opacity:0.8;} 100% { opacity:0.4;} }
-
-/* charge ring growing around the caster */
-.ult-charge-ring {
-    position:absolute; left:50%; top:50%; width:40px; height:40px;
-    transform:translate(-50%,-50%); border-radius:50%;
-    border:4px solid var(--ec); box-shadow:0 0 30px var(--ec), inset 0 0 20px var(--ec);
-    z-index:22; pointer-events:none; animation: chargeRing 1.5s ease-in forwards;
-}
-@keyframes chargeRing {
-    0% { width:160px; height:160px; opacity:0; }
-    40% { opacity:0.9; }
-    100% { width:30px; height:30px; opacity:1; border-width:8px; }
-}
-
-/* FIRE embers floating up */
-.ult-elem-fx .ember { position:absolute; bottom:-10px; width:6px; height:6px; border-radius:50%;
-    background:#fcd34d; box-shadow:0 0 10px #fb7185; animation: emberUp 1.1s ease-out forwards; }
-@keyframes emberUp { 0% { bottom:-10px; opacity:0; transform:scale(1);} 25% { opacity:1;} 100% { bottom:90%; opacity:0; transform:scale(0.3) translateX(20px);} }
-
-/* WATER third wave + droplets */
-.ult-elem-fx .wave3 { animation-delay:0.3s; opacity:0.45; }
-.ult-elem-fx .drop { position:absolute; bottom:20%; width:8px; height:12px; border-radius:50% 50% 50% 50%/60% 60% 40% 40%;
-    background:#60a5fa; box-shadow:0 0 8px #22d3ee; animation: dropFly 0.9s ease-out forwards; }
-@keyframes dropFly { 0% { bottom:0; opacity:0; transform:scale(0.6);} 30% { opacity:1;} 100% { bottom:80%; opacity:0; transform:scale(1) translateX(-14px);} }
+/* attack lunge tuned for full-body */
+@keyframes lungeR { 0% { transform: translateX(0);} 45% { transform: translateX(55px) scale(1.06);} 100% { transform: translateX(0);} }
+@keyframes lungeR-chibi { 0% { transform: scaleX(-1) translateX(0);} 45% { transform: scaleX(-1) translateX(55px) scale(1.06);} 100% { transform: scaleX(-1) translateX(0);} }

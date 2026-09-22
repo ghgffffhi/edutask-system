@@ -7,6 +7,18 @@
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .role-tabs{ display:flex; gap:8px; margin-bottom:18px; }
+        .role-tab{
+            flex:1; padding:10px; border-radius:var(--radius-sm); cursor:pointer;
+            text-align:center; font-family:var(--font); font-weight:600; font-size:14px;
+            border:1px solid var(--border); background:transparent; color:var(--text2); transition:0.2s;
+        }
+        .role-tab.active{ background:var(--accent); color:#fff; border-color:transparent; }
+        .role-panel{ display:none; }
+        .role-panel.active{ display:flex; flex-direction:column; gap:11px; }
+        .field-hint{ font-size:11.5px; color:var(--text2); margin:-4px 0 2px 2px; }
+    </style>
 </head>
 <body>
 
@@ -18,10 +30,28 @@
             <p>สร้างบัญชีเพื่อเริ่มใช้งาน</p>
         </div>
 
-        <div class="auth-form">
-            <input type="text" id="registerUsername" placeholder="ชื่อผู้ใช้">
-            <input type="password" id="registerPassword" placeholder="รหัสผ่าน">
-            <button onclick="register()" class="btn-primary">สมัครสมาชิก</button>
+        <div class="role-tabs">
+            <button type="button" class="role-tab active" id="tabStudent" onclick="switchRole('student')">🧑‍🎓 นักเรียน</button>
+            <button type="button" class="role-tab" id="tabTeacher" onclick="switchRole('teacher')">👩‍🏫 ครู</button>
+        </div>
+
+        <!-- STUDENT REGISTER -->
+        <div class="auth-form role-panel active" id="panelStudent">
+            <input type="text" id="regNameS" placeholder="ชื่อ-นามสกุลจริง">
+            <input type="text" id="regStudentId" placeholder="รหัสประจำตัวนักเรียน">
+            <input type="text" id="regJoinCode" placeholder="รหัสห้องเรียน (ขอจากครู)" style="text-transform:uppercase">
+            <input type="text" id="regUserS" placeholder="ชื่อผู้ใช้ (สำหรับล็อกอิน)">
+            <input type="password" id="regPassS" placeholder="รหัสผ่าน (อย่างน้อย 6 ตัว)">
+            <button onclick="cloudRegisterStudent()" class="btn-primary">เข้าร่วมห้องเรียน</button>
+        </div>
+
+        <!-- TEACHER REGISTER -->
+        <div class="auth-form role-panel" id="panelTeacher">
+            <input type="text" id="regNameT" placeholder="ชื่อ-นามสกุลครู">
+            <input type="text" id="regUserT" placeholder="ชื่อผู้ใช้ (สำหรับล็อกอิน) หรืออีเมล">
+            <input type="password" id="regPassT" placeholder="รหัสผ่าน (อย่างน้อย 6 ตัว)">
+            <div class="field-hint">ระบบจะสร้างห้องเรียน + รหัสห้องให้อัตโนมัติหลังสมัคร</div>
+            <button onclick="cloudRegisterTeacher()" class="btn-primary">สร้างบัญชีครู</button>
         </div>
 
         <div class="auth-link">
@@ -32,6 +62,18 @@
 </div>
 
 <div id="toast"></div>
-<script src="auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="firebase-init.js"></script>
+<script src="cloud-auth.js"></script>
+<script>
+function switchRole(role){
+    document.getElementById("tabStudent").classList.toggle("active", role==="student");
+    document.getElementById("tabTeacher").classList.toggle("active", role==="teacher");
+    document.getElementById("panelStudent").classList.toggle("active", role==="student");
+    document.getElementById("panelTeacher").classList.toggle("active", role==="teacher");
+}
+</script>
 </body>
 </html>

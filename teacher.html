@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduTask — ห้องเรียนคุณครู</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="teacher.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@200;300;400;500;600;700&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="nav-brand">
+            <span>📚</span>
+            <span class="brand-name">EduTask</span>
+        </div>
+        <div class="nav-links">
+            <a href="teacher.html" class="nav-link active">👩‍🏫 ห้องเรียน</a>
+        </div>
+        <div class="nav-actions">
+            <button id="themeToggle" onclick="toggleTheme()" class="btn-icon">🌙</button>
+            <button onclick="logout()" class="btn-logout">🚪 ออกจากระบบ</button>
+        </div>
+    </nav>
+
+    <div class="teacher-wrap" id="teacherWrap" style="display:none">
+
+        <!-- Classroom code banner -->
+        <div class="panel code-banner">
+            <div>
+                <p class="panel-title" style="margin-bottom:4px">🔑 รหัสห้องเรียนของคุณ</p>
+                <p style="font-size:13px;color:var(--text2)">ให้รหัสนี้กับนักเรียนเพื่อเข้าร่วมห้อง</p>
+            </div>
+            <div class="join-code" id="joinCodeDisplay">------</div>
+        </div>
+
+        <!-- Post assignment -->
+        <div class="panel">
+            <p class="panel-title">📮 มอบหมายงานใหม่</p>
+            <div class="assign-form">
+                <input type="text" id="aTitle" placeholder="ชื่องาน เช่น แบบฝึกหัดบทที่ 3">
+                <textarea id="aDesc" placeholder="รายละเอียดงาน (ถ้ามี)"></textarea>
+                <div class="assign-form-row">
+                    <input type="date" id="aDue">
+                    <select id="aPriority">
+                        <option value="สูง">🔴 ด่วน</option>
+                        <option value="กลาง" selected>🟡 ปกติ</option>
+                        <option value="ต่ำ">🟢 ไม่รีบ</option>
+                    </select>
+                </div>
+                <button onclick="postAssignment()" class="btn-primary">📮 มอบหมายงาน</button>
+            </div>
+        </div>
+
+        <!-- Assignments list -->
+        <div class="panel">
+            <p class="panel-title">📋 งานที่มอบหมายไปแล้ว</p>
+            <div id="assignmentList" class="teacher-assign-list"></div>
+            <div class="empty-state" id="assignEmpty" style="display:none">
+                <div class="empty-emoji">📭</div>
+                <p>ยังไม่ได้มอบหมายงานเลย</p>
+            </div>
+        </div>
+
+        <!-- Roster -->
+        <div class="panel">
+            <p class="panel-title">🧑‍🎓 รายชื่อนักเรียนในห้อง <span id="studentCount" class="quest-refresh">0 คน</span></p>
+            <div id="rosterList" class="roster-list"></div>
+            <div class="empty-state" id="rosterEmpty" style="display:none">
+                <div class="empty-emoji">👥</div>
+                <p>ยังไม่มีนักเรียนเข้าร่วมห้อง</p>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="teacher-wrap" id="notTeacherMsg" style="display:none; text-align:center; padding:60px 20px">
+        <div style="font-size:48px">🚫</div>
+        <p style="margin-top:12px; font-size:16px">หน้านี้สำหรับบัญชีคุณครูเท่านั้นนะ</p>
+        <a href="index.html" class="btn-primary" style="display:inline-block;width:auto;padding:10px 28px;margin-top:16px;text-decoration:none">กลับหน้าแรก</a>
+    </div>
+
+    <div id="toast"></div>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+    <script src="firebase-init.js"></script>
+    <script src="sound.js"></script>
+    <script src="teacher.js"></script>
+    <script src="cloud-auth.js"></script>
+
+</body>
+</html>
